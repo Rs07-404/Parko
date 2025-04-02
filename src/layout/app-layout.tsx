@@ -1,24 +1,33 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { redirect, usePathname } from "next/navigation";
 import Loading from "@/app/loading";
-import { publicURL } from "@/lib/routes";
+import { AuthRoutes, publicURL } from "@/lib/routes";
 import Header from "./app-header";
 import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SideBarContent } from "@/components/ui/sidebarContent";
+import { useMounted } from "@/hooks/use-mounted";
+import AuthLayout from "@/components/Auth/Layout";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isPublicURL = publicURL.includes(pathname);
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const isAuthURL = AuthRoutes.includes(pathname);
+    const isMounted = useMounted();
     // const { session, isLoading } = useSession();
 
-    // if (isLoading) {
-    //     return <Loading />
-    // }
+    if (!isMounted) {
+        return <Loading />
+    }
+
+    if (isAuthURL) {
+        return <AuthLayout>{children}</AuthLayout>
+    }
 
     if (isPublicURL) {
-        return <React.Fragment>{children}</React.Fragment>;
+        return <React.Fragment>
+            {children}
+            </React.Fragment>;
     }
 
     if (pathname === "/" /* && session.isLoggedIn*/) {
