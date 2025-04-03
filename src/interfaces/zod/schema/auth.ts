@@ -1,8 +1,21 @@
+import { EmailValidation, FirstNameValidation, LastNameValidation, MobileValidation, PasswordValidation } from "@/lib/Validations/ZodValidations";
 import z from "zod";
 
 // Login Form
 export const loginFormSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
+    // email with email validator
+    email: EmailValidation,
+    // password with all password validators
+    password: PasswordValidation,
 });
 export type LoginFormData = z.infer<typeof loginFormSchema>;
+
+// Signup Form
+export const signupFormSchema = z.object({
+    firstName: FirstNameValidation,
+    lastName: LastNameValidation,
+    mobile: MobileValidation,
+    email: EmailValidation,
+    password:  PasswordValidation,
+});
+export type SignupFormData = z.infer<typeof signupFormSchema>;

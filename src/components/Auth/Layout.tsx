@@ -2,7 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '../ui/card';
 import bg from "@/assets/backgrounds/bg.jpeg"
-import { sniglet } from '@/styles/fonts/Fonts';
 import Logo from '../parko/Logo';
 
 interface LayoutProps {

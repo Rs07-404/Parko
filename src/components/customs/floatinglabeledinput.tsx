@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const FloatingInput = React.forwardRef<HTMLInputElement, InputProps>(
@@ -14,7 +15,7 @@ const FloatingInput = React.forwardRef<HTMLInputElement, InputProps>(
 FloatingInput.displayName = 'FloatingInput';
 
 const FloatingLabel = React.forwardRef<
-  React.ElementRef<typeof Label>,
+  React.ComponentRef<typeof Label>,
   React.ComponentPropsWithoutRef<typeof Label>
 >(({ className, ...props }, ref) => {
   return (
@@ -35,11 +36,36 @@ type FloatingLabelInputProps = InputProps & { label?: string };
 const FloatingLabelInput = React.forwardRef<
   React.ElementRef<typeof FloatingInput>,
   React.PropsWithoutRef<FloatingLabelInputProps>
->(({ id, label, ...props }, ref) => {
+>(({ id, label, value, onChange, ...props }, ref) => {
+  const [hasValue, setHasValue] = React.useState(!!value);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHasValue(!!e.target.value);
+    if (onChange) onChange(e);
+  };
+
+  React.useEffect(() => {
+    setHasValue(!!value);
+  }, [value]);
+
   return (
     <div className="relative">
-      <FloatingInput ref={ref} id={id} {...props} />
-      <FloatingLabel htmlFor={id}>{label}</FloatingLabel>
+      <FloatingInput
+        ref={ref}
+        id={id}
+        value={value}
+        onChange={handleChange}
+        {...props}
+      />
+      <FloatingLabel
+        htmlFor={id}
+        className={cn(
+          'peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/2',
+          hasValue ? '-translate-y-4 scale-75' : ''
+        )}
+      >
+        {label}
+      </FloatingLabel>
     </div>
   );
 });

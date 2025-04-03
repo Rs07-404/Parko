@@ -1,3 +1,4 @@
-export const publicURL = ["/"];
+export const PublicRoutes = ["/", "/home"];
 export const AuthRoutes = ["/login","/signup", "/forgot-password", "/reset-password"];
-export const protectedRoutes = ["/settings","home"];
+export const ProtectedRoutes = ["/settings"];
+export const TestRoutes = ["/home"];

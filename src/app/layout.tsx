@@ -7,6 +7,7 @@ import ThemeProvider from "@/context/theme-provider";
 import { Theme } from "@radix-ui/themes";
 import { Toaster } from "@/components/ui/sonner";
 import AppLayout from "@/layout/app-layout";
+import { AuthContextProvider } from "@/context/auth-context";
 
 
 export const viewport: Viewport = {
@@ -68,11 +69,13 @@ export default function RootLayout({
       <body className={`${cn(poppins.className)}`}>
         <ThemeProvider>
           <Theme>
+            <AuthContextProvider>
             <AppLayout>
-              <div className="m-0 pt-20"></div>
+              <div className="m-0 mt-14"></div>
               {children}
             </AppLayout>
-            <Toaster position="top-right" />
+            </AuthContextProvider>
+            <Toaster position="top-center" />
           </Theme>
         </ThemeProvider>
       </body>

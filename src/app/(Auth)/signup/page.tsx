@@ -1,18 +1,23 @@
 "use client";
 import { Button } from "@/components/ui/button"
-import { Form, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { login } from "@/actions/auth/login";
 import { FloatingLabelInput } from "@/components/customs/floatinglabeledinput";
 import { Moon, SunDim } from "lucide-react";
 import { useTheme } from "next-themes";
-import { loginFormSchema } from "@/interfaces/zod/schema/auth";
 
-const Login = () => {
+const SignUpSchema = z.object({
+    email: z.string().email().regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid email format"),
+    password: z.string().min(6),
+});
+
+const SignUP = () => {
     const { theme, setTheme } = useTheme();
 
-    const loginForm = useForm({
-        resolver: zodResolver(loginFormSchema),
+    const SignupForm = useForm({
+        resolver: zodResolver(SignUpSchema),
         defaultValues: {
             email: "",
             password: "",
@@ -20,14 +25,12 @@ const Login = () => {
     })
 
     return (
-        <Form {...loginForm}>
-        <form className="flex flex-col gap-4" onSubmit={loginForm.handleSubmit(login)}>
+        <form className="flex flex-col gap-4" onSubmit={SignupForm.handleSubmit(login)}>
             <div className="text-2xl items-center text-center flex">
-                <div>Login</div>
+                <div>Sign Up</div>
                 <div className="ml-auto">
                     <Button
                         variant="ghost"
-                        type="button"
                         className="w-8 h-8 p-0 rounded-full bg-accent/80 hover:bg-accent dark:hover:bg-slate-800 transition-colors duration-200 ease-in-out"
                         onClick={() => {
                             setTheme(theme === "dark" ? "light" : "dark");
@@ -38,15 +41,14 @@ const Login = () => {
                     </Button>
                 </div>
             </div>
-            <div className="text-muted-foreground text-sm">Please enter your login details below to proceed</div>
+            <div className="text-muted-foreground text-sm">Please enter details below to proceed</div>
             <div className="flex flex-col space-y-4">
                 <FloatingLabelInput type="text" label="Email" name="email" autoComplete="off" />
                 <FloatingLabelInput type="password" label="Password" name="password" autoComplete="off" />
-                <Button className="btn" type="submit">Login</Button>
+                <Button className="btn" type="submit">Sign Up</Button>
             </div>
         </form>
-        </Form>
     );
 }
 
-export default Login;
+export default SignUP;
