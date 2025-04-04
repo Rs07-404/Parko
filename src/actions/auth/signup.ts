@@ -1,37 +1,24 @@
-import { LoginFormData } from "@/interfaces/zod/schema/auth";
-import { toast } from "sonner";
+import { SignupFormData } from "@/interfaces/zod/schema/auth";
 
-// Function to handle login request
-export async function signup(data: LoginFormData){
+// Function to handle sign request
+export async function signup(data: SignupFormData){
     // Validate the input data against the schema
-    try {
         // Make the signup request
         const response = await fetch("/api/auth/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "allow-credentials": "true",
+                "credentials": "include",
             },
             body: JSON.stringify({
+                firstName: data.firstName,
+                lastName: data.lastName,
                 email: data.email,
+                mobile: data.mobile,
                 password: data.password,
             }),
         });
 
-        const responseData = await response.json();
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        }
-
-        toast.success("Signup Successful");
-        // Return the response data
-        return responseData;
-    } catch (error) {
-        // Handle errors (e.g., network issues or invalid credentials)
-        if (error instanceof Error) {
-            toast.error(error?.message ?? "Signup failed");
-        }else{
-            toast.error("Unexpected Error Occured");
-        }
-    }
+        return response;
 }

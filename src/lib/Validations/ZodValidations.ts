@@ -24,8 +24,17 @@ export const EmailValidation = z.string()
 
 
 export const PasswordValidation = z.string().
-min(6, "Password must be at least 6 characters long")
+min(3, "Password must be at least 6 characters long")
 .regex(/^(?=.*[a-z])/, "Password must contain at least one lowercase letter")
 .regex(/^(?=.*[A-Z])/, "Password must contain at least one uppercase letter")
 .regex(/^(?=.*\d)/, "Password must contain at least one number")
 .regex(/^(?=.*[@$!%*?&])/, "Password must contain at least one special character")
+.regex(/^(?!.*\s)/, "Password must not contain spaces")
+
+export const ConfirmPasswordValidation = z.string()
+.min(3, "Password must be at least 6 characters long")
+.regex(/^(?=.*[a-z])/, "Password must contain at least one lowercase letter")
+.regex(/^(?=.*[A-Z])/, "Password must contain at least one uppercase letter")
+.regex(/^(?=.*\d)/, "Password must contain at least one number")
+.regex(/^(?=.*[@$!%*?&])/, "Password must contain at least one special character")
+.regex(/^(?!.*\s)/, "Password must not contain spaces")

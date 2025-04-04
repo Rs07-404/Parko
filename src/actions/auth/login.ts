@@ -1,37 +1,20 @@
 import { LoginFormData } from "@/interfaces/zod/schema/auth";
-import { toast } from "sonner";
 
 // Function to handle login request
-export async function login(data: LoginFormData){
-    // Validate the input data against the schema
-    try {
-        // Make the login request
-        const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: data.email,
-                password: data.password,
-            }),
-        });
-
-        const responseData = await response.json();
-        // Check if the response is okay
-        if (!response.ok) {
-            throw new Error(responseData.message);
-        }
-
-        toast.success("Login Successful");
-        // Return the response data
-        return responseData;
-    } catch (error) {
-        // Handle errors (e.g., network issues or invalid credentials)
-        if (error instanceof Error) {
-            toast.error(error?.message ?? "Login failed");
-        }else{
-            toast.error("Unexpected Error Occured");
-        }
-    }
+export async function login(data: LoginFormData) {
+    // Make the login request
+    const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "allow-credentials": "true",
+            "credentials": "include",
+        },
+        body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+        }),
+    });
+    // Return the response data
+    return response;
 }

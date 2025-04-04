@@ -1,11 +1,11 @@
 "use client";
 // import Navbar from '@/components/ui/navbar';
-import { CircleUser as AccountCircleIcon } from 'lucide-react';
-import { Moon as ThemeIcon } from 'lucide-react';
+import { CircleUser as AccountCircleIcon, Moon, SunDim } from 'lucide-react';
 import { useTheme } from 'next-themes';
 // import paths from '@/lib/mainRoutes';
 import { useSidebar } from '@/components/ui/sidebar';
 import { sniglet } from '@/styles/fonts/Fonts';
+import { Button } from '@/components/ui/button';
 
 const Header:React.FC<{children: React.ReactNode}> = ({children}) => {
     const { theme, setTheme } = useTheme();
@@ -17,7 +17,18 @@ const Header:React.FC<{children: React.ReactNode}> = ({children}) => {
             {/* <Navbar paths={paths} strictCheck={false} /> */}
             </div>
             <div className="flex self-end gap-2 m-auto w-full sm:w-max h-full justify-end items-center box-border p-4">
-                <ThemeIcon className='cursor-pointer' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
+            <Button
+                        variant="ghost"
+                        type="button"
+                        className="w-8 h-8 p-0 rounded-full bg-accent/80 hover:bg-accent dark:hover:bg-slate-800 transition-colors duration-200 ease-in-out"
+                        onClick={() => {
+                            setTheme(theme === "dark" ? "light" : "dark");
+                        }}
+                    >
+                        <SunDim className="dark:hidden" />
+                        <Moon className="hidden dark:inline" />
+                    </Button>
+                {/* <ThemeIcon className='cursor-pointer' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} /> */}
                 <AccountCircleIcon /> <div className='sm:flex hidden'>Admin</div>
             </div>
         </div>

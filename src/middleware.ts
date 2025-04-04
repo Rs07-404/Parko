@@ -4,7 +4,7 @@ import { PublicRoutes } from './lib/routes';
 import { AuthRoutes } from './lib/routes';
 
 export const middleware = (req: NextRequest) => {
-    const session = req.cookies.get('session')?.value; // Assuming session is stored in cookies
+    const session = req.cookies.get('accessToken')?.value; // Assuming session is stored in cookies
     const requestedUrl = req.nextUrl.pathname;
 
     if (requestedUrl.includes("/api")) {

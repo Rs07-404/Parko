@@ -1,4 +1,4 @@
-import { EmailValidation, FirstNameValidation, LastNameValidation, MobileValidation, PasswordValidation } from "@/lib/Validations/ZodValidations";
+import { ConfirmPasswordValidation, EmailValidation, FirstNameValidation, LastNameValidation, MobileValidation, PasswordValidation } from "@/lib/Validations/ZodValidations";
 import z from "zod";
 
 // Login Form
@@ -17,5 +17,6 @@ export const signupFormSchema = z.object({
     mobile: MobileValidation,
     email: EmailValidation,
     password:  PasswordValidation,
+    confirm: ConfirmPasswordValidation,
 });
 export type SignupFormData = z.infer<typeof signupFormSchema>;
