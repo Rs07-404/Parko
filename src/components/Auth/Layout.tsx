@@ -21,8 +21,8 @@ const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
             <div className="absolute -z-1 inset-0 bg-black opacity-50"></div>
 
             <div className="flex flex-1 w-full justify-center items-center">
-                <Card className='w-[80%] sm:h-[80%] flex justify-center items-center bg-accent/70 backdrop-blur-2xl'>
-                    <CardContent className='flex flex-col sm:flex-row box-border w-full justify-between items-center'>
+                <Card className='sm:w-[80%] h-full sm:min-h-[80%] sm:max-h-[90%] sm:h-max sm:rounded-lg rounded-none overflow-auto flex justify-center items-center bg-accent/70 backdrop-blur-2xl'>
+                    <CardContent className='flex flex-col sm:flex-row box-border gap-4 w-full justify-between items-center'>
                         <div className='flex w-full flex-col gap-4 sm:gap-0 flex-1 h-full justify-center items-center'>
                             <div>
                             <div className='hidden sm:flex'><Logo /></div>
@@ -41,13 +41,13 @@ const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
                         </div>
                         <div className='flex flex-1 h-full justify-center items-center'>
                             <Card>
-                                <CardContent className='flex justify-center items-center'>{children}</CardContent>
+                                <CardContent className='flex justify-center items-center p-0'>{children}</CardContent>
                             </Card>
                         </div>
                     </CardContent>
                 </Card>
             </div>
-            <div className='mt-auto'> Copyright &copy;2025 </div>
+            <div className='mt-auto hidden sm:block'> Copyright &copy;2025 </div>
         </div>
     );
 };

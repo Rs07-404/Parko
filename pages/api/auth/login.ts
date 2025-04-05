@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Check if user exists and validate password
-        const user = await User.findOne({ email }).select("email userName profile roles mobile qrode").lean();
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ error: "Invalid email or password" });
         }
@@ -39,7 +39,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Login the user
         signUser(user._id, user.roles, res);
 
-        return res.status(200).json(user);
+        return res.status(200).json({data:{
+                id: user._id,
+                email: user.email,
+                roles: user.roles,
+        }});
     } catch (error) {
         if (error instanceof Error) {
             console.error("Error in login controller", error.message);

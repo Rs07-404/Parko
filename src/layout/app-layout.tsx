@@ -13,10 +13,10 @@ import PageNotFound from "@/components/ErrorPages/PageNotFound";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const isPublicURL = PublicRoutes.includes(pathname);
-    const isAuthURL = AuthRoutes.includes(pathname);
-    const isTestURL = TestRoutes.includes(pathname);
-    const isProtectedURL = !isPublicURL && !isAuthURL && ProtectedRoutes.includes(pathname);
+    const isPublicURL = PublicRoutes.includes(pathname ?? "");
+    const isAuthURL = AuthRoutes.includes(pathname ?? "");
+    const isTestURL = TestRoutes.includes(pathname ?? "");
+    const isProtectedURL = !isPublicURL && !isAuthURL && ProtectedRoutes.includes(pathname ?? "");
     const { authUser, authLoading } = useAuthContext();
     const isMounted = useMounted();
     // const { session, isLoading } = useSession();
@@ -39,6 +39,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarProvider>)
     }
 
+    if (pathname === "/" || pathname === null) {
+        if (authUser) {
+            redirect("/home");
+        }
+        redirect("/login");
+    }
+
     if (isAuthURL && !authUser) {
         return <AuthLayout>{children}</AuthLayout>
     }
@@ -47,10 +54,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         return <React.Fragment>
             {children}
         </React.Fragment>;
-    }
-
-    if (pathname === "/" /* && session.isLoggedIn*/) {
-        redirect('/home');
     }
 
     if (!isPublicURL && isProtectedURL && authUser) {

@@ -7,10 +7,11 @@ export const middleware = (req: NextRequest) => {
     const session = req.cookies.get('accessToken')?.value; // Assuming session is stored in cookies
     const requestedUrl = req.nextUrl.pathname;
 
-    if (requestedUrl.includes("/api")) {
-        console.log(`Ignoring API route: ${requestedUrl}`);
-        return; // Ignore API routes
+    if (!session) {
+        NextResponse.redirect(new URL('/login', req.nextUrl.origin)); // Redirect to login if no session
+        return; // Stop further processing
     }
+
     if (ProtectedRoutes.includes(requestedUrl)) {
         if (session) {
             return; // Session exists, allow access to protected route

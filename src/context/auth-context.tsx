@@ -10,20 +10,21 @@ export const AuthContext = createContext<IAuthContext>({
 });
 
 import { ReactNode } from "react";
+import getSession from "@/actions/auth/session";
 
 export const AuthContextProvider= ({ children }: { children: ReactNode }) => {
     const [authUser, setAuthUser] = useState<IUser |  null>(null);
     const [ authLoading, setAuthLoading] = useState<boolean>(false);
 
     useEffect(()=>{
-        setAuthLoading(true);
         const verify = async () => {
+            setAuthLoading(true);
             try{
-                const response = await fetch('/api/auth/verifylogin');
-                const user = await response.json();
-                if(user.error){
+                const response = await getSession();
+                if(!response.ok){
                     setAuthUser(null);
                 }else{
+                    const user = await response.json();
                     setAuthUser(user);
                 }
             } catch (error){
@@ -33,10 +34,13 @@ export const AuthContextProvider= ({ children }: { children: ReactNode }) => {
             }
         }
         verify();
+        console.log("AuthContextProvider mounted");
     },[])
 
 
-    return <AuthContext.Provider value={{ authUser, setAuthUser, authLoading }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ authUser, setAuthUser, authLoading }}>
+        {children}
+        </AuthContext.Provider>;
 }
 
 export const useAuthContext = () => {

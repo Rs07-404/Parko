@@ -1,11 +1,17 @@
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 import ParkingArea from "@root/models/ParkingArea";
 import ParkingSpot from "@root/models/ParkingSpot";
 import User from "@root/models/User";
 import Vehicle from "@root/models/Vehicle";
 import Reservation from "@root/models/Reservation";
 
-type MongooseModels = Record<string, Model<unknown>>;
+type MongooseModels = {
+  User: typeof User;
+  ParkingArea: typeof ParkingArea;
+  ParkingSpot: typeof ParkingSpot;
+  Vehicle: typeof Vehicle;
+  Reservation: typeof Reservation;
+};
 
 const registerModels = () => {
   const models: MongooseModels = {

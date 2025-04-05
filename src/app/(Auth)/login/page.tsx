@@ -49,7 +49,7 @@ const Login = () => {
 
     return (
         <FormProvider {...loginForm}>
-            <form className="flex flex-col gap-4" onSubmit={loginForm.handleSubmit(handleLogin)}>
+            <form className="flex flex-col gap-4 p-4" onSubmit={loginForm.handleSubmit(handleLogin)}>
                 <div className="text-2xl items-center text-center flex">
                     <div>Login</div>
                     <div className="ml-auto">

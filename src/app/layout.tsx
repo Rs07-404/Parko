@@ -67,17 +67,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${cn(poppins.className)}`}>
-        <ThemeProvider>
-          <Theme>
-            <AuthContextProvider>
-            <AppLayout>
-              <div className="m-0 mt-14"></div>
-              {children}
-            </AppLayout>
-            </AuthContextProvider>
-            <Toaster position="top-center" />
-          </Theme>
-        </ThemeProvider>
+        <AuthContextProvider>
+          <ThemeProvider>
+            <Theme>
+              <AppLayout>
+                <div className="m-0 mt-14"></div>
+                {children}
+              </AppLayout>
+              <Toaster position="top-center" />
+            </Theme>
+          </ThemeProvider>
+        </AuthContextProvider>
       </body>
     </html>
   );
