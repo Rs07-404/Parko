@@ -20,11 +20,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const { authUser, authLoading } = useAuthContext();
     const isMounted = useMounted();
     // const { session, isLoading } = useSession();
-
+    useEffect(() => {
+        if(!authLoading){
+            if (isAuthURL && authUser) {
+                redirect("/home");
+            }
+    
+            if (isProtectedURL && !authUser) {
+                redirect('/login');
+            }
+        }
+    }, [authUser])
+    
     if (!isMounted || authLoading) {
         return <Loading />
     }
-
+    if (isPublicURL) {
+        return <React.Fragment>
+            {children}
+        </React.Fragment>;
+    }
 
     if (isTestURL) {
         return (<SidebarProvider>
@@ -47,15 +62,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         redirect("/login");
     }
 
+
     if (isAuthURL && !authUser) {
         return <AuthLayout>{children}</AuthLayout>
     }
 
-    if (isPublicURL) {
-        return <React.Fragment>
-            {children}
-        </React.Fragment>;
-    }
 
     if (!isPublicURL && isProtectedURL && authUser) {
         return (
@@ -66,7 +77,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Header>
                     <SidebarTrigger />
                 </Header>
-                <main className="w-full px-2">
+                <main className="w-full">
                     {children}
                 </main>
             </SidebarProvider>
@@ -74,8 +85,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         )
     }
 
-    if (!isPublicURL && isProtectedURL && !authUser) {
-        redirect('/login');
-    }
     return <PageNotFound />;
 }

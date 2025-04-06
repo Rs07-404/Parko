@@ -1,4 +1,4 @@
-const getSession = async () => {
+const fetchSession = async () => {
     const response = await fetch("/api/auth/session", {
         method: "GET",
         headers: {
@@ -9,4 +9,4 @@ const getSession = async () => {
     return response;
 }
 
-export default getSession;
+export default fetchSession;

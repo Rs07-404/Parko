@@ -2,20 +2,23 @@
 import { Button } from "@/components/ui/button"
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Moon, SunDim } from "lucide-react";
+import { LoaderCircleIcon, Moon, SunDim } from "lucide-react";
 import { useTheme } from "next-themes";
 import { InputController } from "@/components/FormControls/InputController";
 import { redirect } from "next/navigation";
 import { SignupFormData, signupFormSchema } from "@/interfaces/zod/schema/auth";
 import { signup } from "@/actions/auth/signup";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useAuthContext } from "@/context/auth-context";
 
 
 const SignUP = () => {
     const { theme, setTheme } = useTheme();
+    const { loadSession } = useAuthContext();
     const [loading, setLoading] = useState<boolean>(false);
+    const [signupSuccess, setSignUpSuccess] = useState<boolean>(false)
 
     const SignupForm = useForm({
         resolver: zodResolver(signupFormSchema),
@@ -43,7 +46,7 @@ const SignUP = () => {
             }
             toast.success("Signup Successful");
             setLoading(false);
-            redirect("/home");
+            setSignUpSuccess(true);
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(error?.message ?? "Signup failed");
@@ -54,6 +57,13 @@ const SignUP = () => {
             setLoading(false);
         }
     }
+
+    useEffect(()=>{
+        if(signupSuccess){
+            loadSession();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[signupSuccess])
 
 
     return (
@@ -87,7 +97,7 @@ const SignUP = () => {
                             <div><InputController type="tel" maxLength={10} label="Mobile" name="mobile" autoComplete="off" required /> </div>
                             <div><InputController type="password" label="Password" name="password" autoComplete="off" required /></div>
                             <div><InputController type="password" label="Confirm Password" name="confirmPassword" autoComplete="off" required /></div>
-                            <Button type="submit">{loading ? "Loading..." : "Sign Up"}</Button>
+                            <Button type="submit">{loading ? <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" /> : "Sign Up"}</Button>
                             <div className="flex gap-1 items-center">Already have an account? <Button className="cursor-pointer underline p-2 m-0" onClick={() => { redirect("/login") }}>Login</Button></div>
                         </div>
                     </div>

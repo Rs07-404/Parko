@@ -9,11 +9,14 @@ import { LoginFormData, loginFormSchema } from "@/interfaces/zod/schema/auth";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { InputController } from "@/components/FormControls/InputController";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "@/context/auth-context";
 
 const Login = () => {
     const { theme, setTheme } = useTheme();
     const [ loading, setLoading ] = useState<boolean>(false);
+    const [ loginSuccess, setLoaginSuccess ] = useState<boolean>(false);
+    const { loadSession } = useAuthContext();
 
     const loginForm = useForm({
         resolver: zodResolver(loginFormSchema),
@@ -34,10 +37,10 @@ const Login = () => {
             }
             toast.success("Login Successful");
             setLoading(false);
-            // redirect("/home");
-
+            setLoaginSuccess(true);
         } catch (error) {
             if (error instanceof Error) {
+                console.log(error)
                 toast.error(error?.message ?? "Login failed");
             } else {
                 toast.error("Unexpected Error Occured");
@@ -46,6 +49,12 @@ const Login = () => {
             setLoading(false);
         }
     }
+
+    useEffect(()=>{
+        if(loginSuccess){
+            loadSession();
+        }
+    },[loginSuccess])
 
     return (
         <FormProvider {...loginForm}>

@@ -5,40 +5,44 @@ import { IAuthContext } from "@/interfaces/context/IAuthContext";
 
 export const AuthContext = createContext<IAuthContext>({
     authUser: null,
+    authLoading: false,
     setAuthUser: () => {},
-    authLoading: false
+    loadSession: () => {},
 });
 
 import { ReactNode } from "react";
-import getSession from "@/actions/auth/session";
+import fetchSession from "@/actions/auth/session";
 
 export const AuthContextProvider= ({ children }: { children: ReactNode }) => {
     const [authUser, setAuthUser] = useState<IUser |  null>(null);
     const [ authLoading, setAuthLoading] = useState<boolean>(false);
 
-    useEffect(()=>{
-        const verify = async () => {
-            setAuthLoading(true);
-            try{
-                const response = await getSession();
-                if(!response.ok){
-                    setAuthUser(null);
-                }else{
-                    const user = await response.json();
-                    setAuthUser(user.user);
-                }
-            } catch (error){
-                if(error instanceof Error){}
-            } finally {
-                setAuthLoading(false);
+
+    const loadSession = async () => {
+        setAuthLoading(true);
+        try{
+            const response = await fetchSession();
+            if(!response.ok){
+                setAuthUser(null);
+            }else{
+                const user = await response.json();
+                setAuthUser(user.user);
             }
+        } catch (error){
+            if(error instanceof Error){}
+        } finally {
+            setAuthLoading(false);
         }
-        verify();
+    }
+
+    useEffect(()=>{
+        
+        loadSession();
         console.log("AuthContextProvider mounted");
     },[])
 
 
-    return <AuthContext.Provider value={{ authUser, setAuthUser, authLoading }}>
+    return <AuthContext.Provider value={{ authUser, loadSession, setAuthUser, authLoading }}>
         {children}
         </AuthContext.Provider>;
 }
