@@ -25,7 +25,7 @@ export const AuthContextProvider= ({ children }: { children: ReactNode }) => {
                     setAuthUser(null);
                 }else{
                     const user = await response.json();
-                    setAuthUser(user);
+                    setAuthUser(user.user);
                 }
             } catch (error){
                 if(error instanceof Error){}

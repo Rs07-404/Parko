@@ -74,7 +74,7 @@ export default function RootLayout({
                 <div className="m-0 mt-14"></div>
                 {children}
               </AppLayout>
-              <Toaster position="top-center" />
+              <Toaster position="top-center" richColors={true} />
             </Theme>
           </ThemeProvider>
         </AuthContextProvider>

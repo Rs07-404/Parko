@@ -6,7 +6,7 @@ export const loginFormSchema = z.object({
     // email with email validator
     email: EmailValidation,
     // password with all password validators
-    password: z.string(),
+    password: PasswordValidation,
 });
 export type LoginFormData = z.infer<typeof loginFormSchema>;
 
@@ -17,6 +17,6 @@ export const signupFormSchema = z.object({
     mobile: MobileValidation,
     email: EmailValidation,
     password:  PasswordValidation,
-    confirm: ConfirmPasswordValidation,
+    confirmPassword: ConfirmPasswordValidation,
 });
 export type SignupFormData = z.infer<typeof signupFormSchema>;

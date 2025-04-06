@@ -26,17 +26,22 @@ globalNode.mongooseCache = globalNode.mongooseCache || { conn: null, promise: nu
 const cached: MongooseCache = globalNode.mongooseCache;
 
 export async function connectToDatabase() {
-    if (cached.conn) {
-        return cached.conn;
-    }
-
-    if (!cached.promise) {
-        cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false }).then((m) => m.connection);
-    }
+    try {
+        if (cached.conn) {
+            return cached.conn;
+        }
     
-
-    cached.conn = await cached.promise;
-    globalNode.mongooseCache = cached;
-    registerModels();
-    return cached.conn;
+        if (!cached.promise) {
+            cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false }).then((m) => m.connection);
+        }
+        
+    
+        cached.conn = await cached.promise;
+        registerModels(); // Ensure models are registered after connection
+        globalNode.mongooseCache = cached;
+        return cached.conn;
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+        throw new Error("Failed to connect to MongoDB");
+    }
 }

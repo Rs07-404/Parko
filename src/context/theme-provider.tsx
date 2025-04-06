@@ -3,7 +3,7 @@
 import { useMounted } from "@/hooks/use-mounted";
 import { useTheme, ThemeProvider as NextThemeProvider } from "next-themes";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export interface ThemeProps {
     toggleTheme: () => void;
@@ -32,8 +32,8 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         <ThemeContext.Provider value={{ toggleTheme, currentTheme }}>
             <NextThemeProvider
             attribute="class"
-            defaultTheme={"light"}
             enableSystem
+            disableTransitionOnChange
             >
                 {
                     isMounted &&

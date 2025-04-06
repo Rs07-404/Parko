@@ -24,8 +24,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string, roles: string[] };
-        const user = await User.findById(decoded.userId).select("email userName profile roles mobile qrode").lean();
+        const decoded = jwt.verify(token, JWT_SECRET) as { id: string, roles: string[] };
+        console.log(decoded)
+        const user = await User.findById(decoded.id).select("email userName profile roles mobile qrode");
+        console.log(user)
 
         if (!user) {
             return res.status(401).json({ message: "Unauthorized: User not found" });

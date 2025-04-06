@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { redirect, usePathname } from "next/navigation";
 import Loading from "@/app/loading";
 import { AuthRoutes, ProtectedRoutes, PublicRoutes, TestRoutes } from "@/lib/routes";
@@ -24,6 +24,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     if (!isMounted || authLoading) {
         return <Loading />
     }
+
 
     if (isTestURL) {
         return (<SidebarProvider>

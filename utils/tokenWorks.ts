@@ -17,6 +17,7 @@ export const signUser = (userId: string, roles: string[], res:NextApiResponse) =
             serialize("accessToken", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
+                path: "/",
                 sameSite: "strict",
                 maxAge: 60 * 60 * 24 * 7,
             })

@@ -6,10 +6,13 @@ import { useTheme } from 'next-themes';
 import { useSidebar } from '@/components/ui/sidebar';
 import { sniglet } from '@/styles/fonts/Fonts';
 import { Button } from '@/components/ui/button';
+import { useAuthContext } from '@/context/auth-context';
 
 const Header:React.FC<{children: React.ReactNode}> = ({children}) => {
     const { theme, setTheme } = useTheme();
-    const { open } = useSidebar()
+    const { open } = useSidebar();
+    const { authUser } = useAuthContext();
+
     return (
         <div className={`flex fixed top-0 z-10000 w-full ${open ? "border-none" : ""} h-14 items-center px-2 bg-card border-b-2 dark:border-none box-border`}>
             <div className={`flex w-max h-full text-2xl justify-center p-2 ${sniglet.className} items-center gap-1`}>{children}{open ? "Menu" : "Parko"}</div>
@@ -29,7 +32,7 @@ const Header:React.FC<{children: React.ReactNode}> = ({children}) => {
                         <Moon className="hidden dark:inline" />
                     </Button>
                 {/* <ThemeIcon className='cursor-pointer' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} /> */}
-                <AccountCircleIcon /> <div className='sm:flex hidden'>Admin</div>
+                <AccountCircleIcon /> <div className='sm:flex hidden'>{authUser?.profile.firstName}</div>
             </div>
         </div>
     )

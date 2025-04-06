@@ -51,6 +51,7 @@ export const InputController = <T extends FieldValues>({ name, label, reset, noS
                             minLength={rest?.minLength}
                             maxLength={rest?.maxLength}
                             autoComplete={rest?.autoComplete}
+                            required={rest?.required}
                         />
                         {reset && field.value && <X onClick={() => form.resetField(name)}
                             className={cn("opacity-50 hover:opacity-100 size-7 absolute right-1 top-1/2 -translate-y-1/2 px-1.5 font-normal cursor-pointer")} />}

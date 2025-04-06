@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> { }
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 const FloatingInput = React.forwardRef<HTMLInputElement, InputProps & { error?: boolean }>(
     ({ className, error, ...props }, ref) => {
@@ -56,7 +56,7 @@ const FloatingLabelInput = React.forwardRef<
                     {tooltipContent && <TooltipContent side="left" align="center">{tooltipContent}</TooltipContent>}
                 </Tooltip>
             </TooltipProvider>
-            <FloatingLabel htmlFor={id}>{label}</FloatingLabel>
+            <FloatingLabel htmlFor={id}>{label}{props.required && " *"}</FloatingLabel>
         </div>
     );
 });

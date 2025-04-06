@@ -69,11 +69,11 @@ const UserSchema = new mongoose.Schema<IUserDocument>({
     type: String,
     required: true
   },
-  gender: {
-    type: String,
-    required: true,
-    enum: ["male", "female"]
-  },
+  // gender: {
+  //   type: String,
+  //   required: true,
+  //   enum: ["male", "female"]
+  // },
   vehicles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vehicle',
@@ -113,6 +113,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword: string):
 };
 
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 export default User;

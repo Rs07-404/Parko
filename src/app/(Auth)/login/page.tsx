@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { login } from "@/actions/auth/login";
-import { Moon, SunDim } from "lucide-react";
+import { LoaderCircleIcon, Moon, SunDim } from "lucide-react";
 import { useTheme } from "next-themes";
 import { LoginFormData, loginFormSchema } from "@/interfaces/zod/schema/auth";
 import { toast } from "sonner";
@@ -34,7 +34,7 @@ const Login = () => {
             }
             toast.success("Login Successful");
             setLoading(false);
-            redirect("/home");
+            // redirect("/home");
 
         } catch (error) {
             if (error instanceof Error) {
@@ -49,7 +49,7 @@ const Login = () => {
 
     return (
         <FormProvider {...loginForm}>
-            <form className="flex flex-col gap-4 p-4" onSubmit={loginForm.handleSubmit(handleLogin)}>
+            <form className="flex flex-col gap-4 p-4 transition-all animate-fade-in" onSubmit={loginForm.handleSubmit(handleLogin)}>
                 <div className="text-2xl items-center text-center flex">
                     <div>Login</div>
                     <div className="ml-auto">
@@ -70,7 +70,7 @@ const Login = () => {
                 <div className="flex flex-col space-y-4">
                     <InputController type="text" label="Email" name="email" autoComplete="off" />
                     <InputController type="password" label="Password" name="password" autoComplete="off" />
-                    <Button className="btn" type="submit">{loading ? "Loading..." : "Login"}</Button>
+                    <Button className="btn" type="submit" disabled={loading}>{loading ? <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" /> : "Login"}</Button>
                 </div>
                 <div>Create a new account? <span className="cursor-pointer underline" onClick={()=>{redirect("/signup")}}>Sign Up</span></div>
             </form>

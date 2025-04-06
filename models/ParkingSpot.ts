@@ -25,6 +25,12 @@ const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
         coordinates:{
             type: [Number],
             required: true,
+            validate: {
+                validator: function (value: number[]) {
+                    return value.length === 2;
+                },
+                message: 'Coordinates must contain exactly two numbers (latitude and longitude).',
+            },
         },
     },
     status: {
@@ -37,6 +43,6 @@ const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
     },
 }, {timestamps: true});
 
-const ParkingSpot = mongoose.model('ParkingSpot', parkingSpotSchema);
+const ParkingSpot = mongoose.models.ParkingSpot || mongoose.model('ParkingSpot', parkingSpotSchema);
 
 export default ParkingSpot;

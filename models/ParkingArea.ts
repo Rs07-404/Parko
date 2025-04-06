@@ -58,6 +58,5 @@ const parkingAreaSchema = new mongoose.Schema<IParkingArea>({
     ]
 })
 
-
-const ParkingArea = mongoose.model('ParkingArea', parkingAreaSchema);
+const ParkingArea = mongoose.models.ParkingArea || mongoose.model('ParkingArea', parkingAreaSchema);
 export default ParkingArea;

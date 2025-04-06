@@ -20,14 +20,21 @@ const SignUP = () => {
     const SignupForm = useForm({
         resolver: zodResolver(signupFormSchema),
         defaultValues: {
+            firstName: "",
+            lastName: "",
             email: "",
+            mobile: "",
             password: "",
+            confirmPassword: "",
         },
     })
 
     const handleSignUp = async (data: SignupFormData) => {
         try {
             setLoading(true);
+            if(data.password != data.confirmPassword){
+                throw new Error("Password don't match")
+            }
             const response = await signup(data);
             const responseData = await response.json();
             // Check if the response is okay
@@ -51,9 +58,9 @@ const SignUP = () => {
 
     return (
         <FormProvider {...SignupForm}>
-            <form className="overflow-auto" onSubmit={SignupForm.handleSubmit(handleSignUp)}>
+            <form className="overflow-auto transition-all animate-fade-in" onSubmit={SignupForm.handleSubmit(handleSignUp)}>
                 <ScrollArea className="sm:h-[calc(100vh-200px)] px-4">
-                    <div className=" flex flex-col gap-4 w-full h-full">
+                    <div className=" flex flex-col gap-4 w-full px-1 h-full">
                         <div className="text-2xl items-center text-center flex">
                             <div>Sign Up</div>
                             <div className="ml-auto">
@@ -71,17 +78,17 @@ const SignUP = () => {
                             </div>
                         </div>
                         <div className="text-muted-foreground text-sm">Please enter details below to proceed</div>
-                        <div className="flex flex-col space-y-4">
+                        <div className="flex flex-col space-y-4 w-full">
                             <div className="flex flex-shrink gap-2">
-                                <InputController type="text" label="First Name" name="firstName" autoComplete="off" className="flex-grow" />
-                                <InputController type="text" label="Last Name" name="lastName" autoComplete="off" className="flex-grow" />
+                                <InputController type="text" label="First Name" name="firstName" autoComplete="off" className="flex-grow" required />
+                                <InputController type="text" label="Last Name" name="lastName" autoComplete="off" className="flex-grow" required />
                             </div>
-                            <div><InputController type="text" label="Email" name="email" autoComplete="off" /></div>
-                            <div><InputController type="number" label="Mobile" name="mobile" autoComplete="off" /> </div>
-                            <div><InputController type="password" label="Password" name="password" autoComplete="off" /></div>
-                            <div><InputController type="password" label="Confirm Password" name="confirmPassword" autoComplete="off" /></div>
+                            <div><InputController type="text" label="Email" name="email" autoComplete="off" required /></div>
+                            <div><InputController type="tel" maxLength={10} label="Mobile" name="mobile" autoComplete="off" required /> </div>
+                            <div><InputController type="password" label="Password" name="password" autoComplete="off" required /></div>
+                            <div><InputController type="password" label="Confirm Password" name="confirmPassword" autoComplete="off" required /></div>
                             <Button type="submit">{loading ? "Loading..." : "Sign Up"}</Button>
-                            <div>Already have an account? <span className="cursor-pointer underline" onClick={() => { redirect("/login") }}>Login</span></div>
+                            <div className="flex gap-1 items-center">Already have an account? <Button className="cursor-pointer underline p-2 m-0" onClick={() => { redirect("/login") }}>Login</Button></div>
                         </div>
                     </div>
                     <ScrollBar orientation="vertical" />

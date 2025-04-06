@@ -5,10 +5,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try{
-        const {firstName, lastName, email, mobile, gender, password, confirmPassword} = req.body;
+        const {firstName, lastName, email, mobile, /* gender, */ password} = req.body;
         // Check for password and confirmPassword
-        if(password != confirmPassword){
-            return res.status(400).json({error: "Password don't match"})
+
+
+        if(!firstName || !lastName || !email || !mobile || !password){
+            return res.status(400).json({error: "Please fill all the fields"});
         }
 
         // Check for existing User
@@ -19,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
         // Create New User
         const newUser = new User({
-            username: email,
+            userName: email,
             profile: {
                 firstName: firstName,
                 lastName: lastName,
@@ -27,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             email,
             password,
             mobile,
-            gender,
+            // gender,
             roles: ["User"],
         });
 
@@ -39,10 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 userId: newUser._id,
             }
             const qrcode = await generateQRCode(qrData);
-            console.log("QR Code generated successfully");
             newUser.qrcode = qrcode ?? ""; // Assign the generated QR code to the user
             await newUser.save();
-            console.log("User saved successfully");
             res.status(201).json({message: "User created successfully", user: newUser});
         }else{
             res.status(400).json({error: "Invalid user data"});

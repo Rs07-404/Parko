@@ -3,7 +3,7 @@ import { ProtectedRoutes } from './lib/routes';
 import { PublicRoutes } from './lib/routes';
 import { AuthRoutes } from './lib/routes';
 
-export const middleware = (req: NextRequest) => {
+export const MiddleWare = (req: NextRequest) => {
     const session = req.cookies.get('accessToken')?.value; // Assuming session is stored in cookies
     const requestedUrl = req.nextUrl.pathname;
 
