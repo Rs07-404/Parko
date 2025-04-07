@@ -20,7 +20,7 @@ export default function Navbar({ paths, strictCheck }: NavbarProps) {
       {paths.map(({ name, path }) => (
         <div key={path} className="flex justify-center items-center">
           <Link
-            className={`p-4 ${(strictCheck ? (path === pathName):(pathName.includes(path))) ? "border-b-2 border-y-sidebar-accent-foreground" : ""}`}
+            className={`p-4 ${(strictCheck ? (path === pathName):(pathName?.includes(path))) ? "border-b-2 border-y-sidebar-accent-foreground" : ""}`}
             href={path}
           >
             {name}
