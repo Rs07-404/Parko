@@ -26,7 +26,7 @@ const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
                 <Button
                     variant="ghost"
                     type="button"
-                    className="w-8 h-8 p-0 rounded-full bg-accent/80 hover:bg-accent dark:hover:bg-slate-800 transition-colors duration-200 ease-in-out"
+                    className="w-8 h-8 p-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out"
                     onClick={() => {
                         setTheme(theme === "dark" ? "light" : "dark");
                     }}
@@ -34,7 +34,6 @@ const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
                     <SunDim className="dark:hidden" />
                     <Moon className="hidden dark:inline" />
                 </Button>
-                {/* <ThemeIcon className='cursor-pointer' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} /> */}
                 <div>
                     <Avatar className='cursor-pointer'>
                         <AvatarImage src={authUser?.profile.image} alt={"profile"} />

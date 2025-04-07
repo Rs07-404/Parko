@@ -1,7 +1,7 @@
 import { LoaderCircleIcon, LogOut } from "lucide-react";
 import Link from "next/link";
 import paths from "@/lib/mainRoutes";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { SidebarContent, SidebarFooter, SidebarGroup, useSidebar } from "./sidebar";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
 import useLogOut from "@/hooks/use-logout";
@@ -9,6 +9,7 @@ import useLogOut from "@/hooks/use-logout";
 export function SideBarContent() {
   const { setOpen, state } = useSidebar();
   const { triggerLogOut, logoutLoading } = useLogOut();
+  const pathname = usePathname();
 
 
   return (
@@ -40,9 +41,9 @@ export function SideBarContent() {
             </SidebarGroup>
             :
             <SidebarGroup key={path.pathId}>
-            <Accordion type="single" collapsible>
-              <AccordionItem value={path.path}>
-                <AccordionTrigger className={`flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800`} onClick={() => { redirect(path.path) }} key={path.pathId}>
+            <Accordion type="single" className="p-0" collapsible>
+              <AccordionItem value={path.path} className="p-0 flex items-center justify-center">
+                <AccordionTrigger className={`flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 border-4 border-transparent rounded-r-none ${pathname?.includes(path.path) && "rounded-r-none border-r-primary"}`} onClick={() => { redirect(path.path) }} key={path.pathId}>
                   <path.icon className="h-5 w-5" />
                   {state == "expanded" && <span>{path.name}</span>}
                 </AccordionTrigger>

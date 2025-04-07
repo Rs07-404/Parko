@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DEFAULT_COORDINATES } from "@/constants/constants";
-import { RadarIcon } from "lucide-react";
+import { LocateFixed } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
@@ -11,30 +11,47 @@ function LocateButton() {
   const map = useMap();
   const [latit, setLatit] = useState<number>(DEFAULT_COORDINATES[0]);
   const [longit, setLongit] = useState<number>(DEFAULT_COORDINATES[1]);
+  const [locationloading, setLocationLoading] = useState<boolean>(false);
 
-  const locateUser = () => {
+
+  function getCurrentLocation(): Promise<GeolocationPosition> {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("Geolocation is not supported by this browser."));
+      } else {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      }
+    });
+  }
+
+
+  const locateUser = async () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLatit(latitude); // Update latitude state
-          setLongit(longitude); // Update longitude state
-          map.setView([latitude, longitude], 10); // Move map to user's location
-        },
-        (error) => {
-          if(error instanceof Error) {toast.error(error.message)}
-          else {toast.error("Location access denied or unavailable.");}
-          
+      try {
+        setLocationLoading(true);
+        const position = await getCurrentLocation();
+        const { latitude, longitude } = position.coords;
+        setLatit(latitude);
+        setLongit(longitude);
+        map.setView([latitude, longitude], 10);
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          toast.error("Error getting Location: " + error.message);
+        } else {
+          toast.error(`Error getting location`);
+
         }
-      );
+      } finally {
+        setLocationLoading(false);
+      }
     } else {
       toast.error("Geolocation is not supported by your browser.");
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     locateUser();
-  },[])
+  }, [])
 
   return (
     <>
@@ -42,10 +59,10 @@ function LocateButton() {
         <Popup>Location</Popup>
       </Marker>
       <Button
-        className="absolute h-16 w-16 rounded-full bottom-4 right-4 z-1000"
+        className="absolute h-12 w-12 rounded-full p-0! m-0! has-[>svg]:px-0! py-0! [&_svg:not([class*='size-'])]:size-8 bottom-4 right-4 z-1000"
         onClick={locateUser}
       >
-        <RadarIcon className="h-12 w-12" />
+        <LocateFixed className={`${locationloading && "text-primary transition-all animate-pulse"}`} />
 
       </Button>
     </>
