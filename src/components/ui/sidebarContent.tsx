@@ -24,7 +24,7 @@ export function SideBarContent() {
                   </AccordionTrigger>
 
                   <AccordionContent className="pl-6">
-                    {path.subPaths.map((subPath) =>
+                    {path.subPaths.length && path.subPaths.map((subPath) =>
                       <SidebarGroup
                         key={subPath.subPathId}
                         onClick={(e) => { e.preventDefault(); redirect(subPath.path) }}
