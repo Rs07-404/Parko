@@ -1,0 +1,48 @@
+"use client";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from "react";
+import Loading from "@/app/loading";
+import { useTheme } from "next-themes";
+import { DefaultMarkerIcon } from "./icons/icons";
+import { Button } from "../ui/button";
+import { LocateFixed } from "lucide-react";
+import LocateButton from "./mapComponents/LocationButton";
+import ZoomAction from "./MapActions/zoomAction";
+
+
+const DEFAULT_POSITION: [number, number] = [-6.792354, 39.208328];
+const DEFAULT_ZOOM = 13;
+
+
+const Map = () => {
+  const [mounted, setMounted] = useState<boolean>(false);
+  const { theme } = useTheme();
+  const DEFAULT_TILE_LAYER = theme === "dark" ?
+    "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+    : " https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <Loading />;
+
+  return (
+    <MapContainer boundsOptions={{ padding: [0, 0] }} center={DEFAULT_POSITION} zoom={DEFAULT_ZOOM} minZoom={3} scrollWheelZoom={true}
+      className="w-full h-full p-0"
+    >
+      {/* Map */}
+      <TileLayer url={DEFAULT_TILE_LAYER} />
+      <Marker position={DEFAULT_POSITION} icon={DefaultMarkerIcon} >
+        <Popup>Location</Popup>
+      </Marker>
+
+      {/* Map Controlls */}
+      <ZoomAction /> {/* Hook to handle Ctrl+ and Ctrl- zooming */}
+      <LocateButton /> {/* Button to locate user */}
+    </MapContainer>
+  )
+}
+
+export default Map;
