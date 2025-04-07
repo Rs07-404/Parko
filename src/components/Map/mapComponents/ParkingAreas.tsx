@@ -3,20 +3,9 @@
 import { Marker, Popup } from "react-leaflet";
 import { SpotAvailable, SpotBusy, SpotBooked } from "../icons/icons";
 import { useAllParkingAreas } from "@/hooks/use-parkingAreas";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
 
-const getMarkerIcon = (status: IParkingSpot["status"]) => {
-  switch (status) {
-    case "available":
-      return SpotAvailable;
-    case "occupied":
-      return SpotBusy;
-    default:
-      return SpotBooked;
-  }
-};
 
 export interface IParkingSpot {
     _id: string;
@@ -39,23 +28,30 @@ const ParkingAreas = () => {
     AllAreaLoading,
   } = useAllParkingAreas();
 
-
-  if (!allParkingAreas?.length) {
-    toast.warning("No Parking Areas Found.");
-    return null;
-  }
+  const getMarkerIcon = (status: IParkingSpot["status"]) => {
+    switch (status) {
+      case "available":
+        return SpotAvailable;
+      case "occupied":
+        return SpotBusy;
+      default:
+        return SpotBooked;
+    }
+  };
+  
 
   return (
     <>
-      {allParkingAreas.map((area) =>
+      {allParkingAreas?.length && allParkingAreas.map((area) =>
         area.parkingSpots?.map((spot) => {
           const [lat, lng] = spot.location.coordinates;
+          const Icon = getMarkerIcon(spot.status)
 
           return (
             <Marker
               key={spot._id}
               position={[lat, lng]}
-              icon={getMarkerIcon(spot.status)}
+              icon={Icon}
             >
               <Popup>
                 <div className="text-sm">
