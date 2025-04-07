@@ -25,7 +25,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             if (isAuthURL && authUser) {
                 redirect("/home");
             }
-    
+            
             if (isProtectedURL && !authUser) {
                 redirect('/login');
             }
@@ -35,6 +35,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     if (!isMounted || authLoading) {
         return <Loading />
     }
+
+    if (pathname === "/" || pathname === null) {
+        if (authUser) {
+            redirect("/home");
+        }
+        redirect("/login");
+    }
+    
     if (isPublicURL) {
         return <React.Fragment>
             {children}
@@ -55,12 +63,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarProvider>)
     }
 
-    if (pathname === "/" || pathname === null) {
-        if (authUser) {
-            redirect("/home");
-        }
-        redirect("/login");
-    }
 
 
     if (isAuthURL && !authUser) {
