@@ -30,7 +30,9 @@ const Map = () => {
       className="w-full h-full p-0"
     >
       {/* Map */}
-      <TileLayer url={DEFAULT_TILE_LAYER} />
+      <TileLayer 
+      attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+      url={DEFAULT_TILE_LAYER} />
 
       {/* Map Controlls */}
       <ZoomAction /> {/* Hook to handle Ctrl+ and Ctrl- zooming */}
