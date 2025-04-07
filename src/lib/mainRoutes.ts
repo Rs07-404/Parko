@@ -1,4 +1,4 @@
-import { Home } from "lucide-react";
+import { Home, UserCog } from "lucide-react";
 
 interface path {
   pathId: string;
@@ -16,11 +16,17 @@ interface path {
 
 const paths: path[] = [
   {
-    pathId: "MP1",
+    pathId: "MP1", // MainPath[number]
     name: "Home",
     path: "/home",
     icon: Home
   },
+  {
+    pathId: "MP2",
+    name: "Profile",
+    path: "/profile",
+    icon: UserCog
+  }
   // {
   //   pathId: "MP2",
   //   name: "Settings",

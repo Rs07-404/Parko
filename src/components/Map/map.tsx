@@ -6,6 +6,7 @@ import Loading from "@/app/loading";
 import { useTheme } from "next-themes";
 import LocateButton from "./mapComponents/LocationButton";
 import ZoomAction from "./MapActions/zoomAction";
+import ParkingAreas from "./mapComponents/ParkingAreas";
 
 
 const DEFAULT_POSITION: [number, number] = [-6.792354, 39.208328];
@@ -37,6 +38,7 @@ const Map = () => {
       {/* Map Controlls */}
       <ZoomAction /> {/* Hook to handle Ctrl+ and Ctrl- zooming */}
       <LocateButton /> {/* Button to locate user */}
+      <ParkingAreas />
     </MapContainer>
   )
 }

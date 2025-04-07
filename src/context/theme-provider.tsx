@@ -18,32 +18,32 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const { setTheme } = useTheme();
 
     const toggleTheme = () => {
-        localStorage.setItem('apptheme', currentTheme === 'light'? 'dark': 'light')
-        setCurrentTheme((prev)=> prev === 'light' ? 'dark': 'light');
+        localStorage.setItem('apptheme', currentTheme === 'light' ? 'dark' : 'light')
+        setCurrentTheme((prev) => prev === 'light' ? 'dark' : 'light');
         setTheme((prev) => prev === 'light' ? 'dark' : 'light');
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         const themeLocalStorage = localStorage.getItem('apptheme');
-        if (themeLocalStorage) {setCurrentTheme(themeLocalStorage); setTheme(themeLocalStorage) }
+        if (themeLocalStorage) { setCurrentTheme(themeLocalStorage); setTheme(themeLocalStorage) }
     }, [isMounted])
 
     return (
         <ThemeContext.Provider value={{ toggleTheme, currentTheme }}>
             <NextThemeProvider
-            attribute="class"
-            enableSystem
-            disableTransitionOnChange
+                attribute="class"
+                enableSystem
+                disableTransitionOnChange
             >
                 {
                     isMounted &&
                     <>
                         {children}
                         <ProgressBar
-                        height="4px"
-                        color="rgb(26 139 244)"
-                        options={{ showSpinner: false }}
-                        shallowRouting
+                            height="4px"
+                            color="rgb(26 139 244)"
+                            options={{ showSpinner: false }}
+                            shallowRouting
                         />
                     </>
                 }

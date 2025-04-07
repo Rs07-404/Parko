@@ -55,7 +55,7 @@ const UserSchema = new mongoose.Schema<IUserDocument>({
   },
   roles: {
     type: [String],
-    enum: ["User", "LandOwner", "Admin"],
+    enum: ["User", "LandOwner", "Admin", "Operator"],
     default: ["User"],
     required: true,
     validate: {
