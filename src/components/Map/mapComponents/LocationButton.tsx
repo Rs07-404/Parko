@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DEFAULT_COORDINATES } from "@/constants/constants";
-import { LocateFixed, Radar, RadarIcon } from "lucide-react";
+import { RadarIcon } from "lucide-react";
 import { useState } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
@@ -22,7 +22,9 @@ function LocateButton() {
           map.setView([latitude, longitude], 10); // Move map to user's location
         },
         (error) => {
-          toast.error("Location access denied or unavailable.");
+          if(error instanceof Error) {toast.error(error.message)}
+          else {toast.error("Location access denied or unavailable.");}
+          
         }
       );
     } else {

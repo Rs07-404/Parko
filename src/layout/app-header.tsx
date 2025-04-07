@@ -10,7 +10,7 @@ import { useAuthContext } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useLogOut from '@/hooks/use-logout';
 
-const Header: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const { theme, setTheme } = useTheme();
     const { open, isMobile } = useSidebar();
     const { authUser } = useAuthContext();
@@ -18,7 +18,7 @@ const Header: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     return (
         <div className={`flex fixed top-0 z-10000 w-full ${open ? "border-none" : ""} h-14 items-center px-2 bg-card border-b-2 dark:border-none box-border`}>
-            <div className={`flex w-max h-full text-2xl justify-center p-2 ${sniglet.className} items-center gap-1`}>{/*children*/}{open ? "Menu" : "Parko"}</div>
+            <div className={`flex w-max h-full text-2xl justify-center p-2 ${sniglet.className} items-center gap-1`}>{children && children}{open ? "Menu" : "Parko"}</div>
             <div className="sm:flex w-full m-auto justify-center items-center">
                 {/* <Navbar paths={paths} strictCheck={false} /> */}
             </div>

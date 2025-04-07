@@ -24,7 +24,7 @@ export default function ContextMenu({ items, className, children, isOpen, onClos
   };
 
   return (
-    <ShadCnContextMenu onOpenChange={(state) => { setOpen(state); if (!state) handleClose(); }} {...props}>
+    <ShadCnContextMenu modal={open} onOpenChange={(state) => { setOpen(state); if (!state) handleClose(); }} {...props}>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className={cn("min-w-[150px]", className)}>
         {items.map((item) => (

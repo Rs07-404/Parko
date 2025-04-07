@@ -21,17 +21,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const isMounted = useMounted();
     // const { session, isLoading } = useSession();
     useEffect(() => {
-        if(!authLoading){
+        if (!authLoading) {
             if (isAuthURL && authUser) {
                 redirect("/home");
             }
-            
+
             if (isProtectedURL && !authUser) {
                 redirect('/login');
             }
         }
     }, [authUser])
-    
+
     if (!isMounted || authLoading) {
         return <Loading />
     }
@@ -42,7 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         }
         redirect("/login");
     }
-    
+
     if (isPublicURL) {
         return <React.Fragment>
             {children}
@@ -54,9 +54,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Sidebar collapsible="icon" className="pt-16 bg-card dark:border-none">
                 <SideBarContent />
             </Sidebar>
-            <Header>
-                <SidebarTrigger />
-            </Header>
+            <Header />
+            {/* <SidebarTrigger /> */}
+            {/* </Header> */}
             <main className="w-full">
                 {children}
             </main>
@@ -76,9 +76,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Sidebar collapsible="icon" className="pt-16 bg-card dark:border-none">
                     <SideBarContent />
                 </Sidebar>
-                <Header>
-                    <SidebarTrigger />
-                </Header>
+                <Header />
+                {/* <SidebarTrigger /> */}
+                {/* </Header> */}
                 <main className="w-full">
                     {children}
                 </main>

@@ -8,7 +8,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Select, Item } from "@/components/ui/custom-select";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
 
