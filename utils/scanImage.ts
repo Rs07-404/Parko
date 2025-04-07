@@ -6,7 +6,7 @@ import { createCanvas, loadImage } from 'canvas';
  * @param {string} imageData - Base64-encoded string of the image.
  * @returns {string|null} - The decoded QR code payload or null if not found.
  */
-function scanQRCodeFromImage(imageData) {
+function scanQRCodeFromImage(imageData:string) {
     return new Promise(async (resolve, reject) => {
         try {
             const imgBuffer = Buffer.from(imageData.split(',')[1], 'base64'); // Remove 'data:image/jpeg;base64,' prefix
