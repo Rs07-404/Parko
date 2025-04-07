@@ -1,4 +1,9 @@
 import { createLucideIcon } from "@/utils/createLucideIcon";
-import { MapPin } from "lucide-react";
+import Image from "next/image";
+import gpsIcon from "@/assets/gps.png";
+import markerPending from "@/assets/mapMarkerPending.png";
+import markerDefault from "@/assets/mapMarkerDefault.png";
 
-export const DefaultMarkerIcon = createLucideIcon(<MapPin size={30} className="text-primary" />);
+export const DefaultMarkerIcon = createLucideIcon(<Image height={32} width={32} alt="gps_pointer" src={markerDefault} />);
+export const LocationMarkerPendingIcon = createLucideIcon(<Image height={32} width={32} alt="marker" src={markerPending} />)
+export const LocationMarkerIcon = createLucideIcon(<Image height={32} width={32} alt="gps_pointer" src={gpsIcon} />);

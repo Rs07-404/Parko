@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { DEFAULT_COORDINATES } from "@/constants/constants";
-import { LocateFixed, Radar, RadarIcon } from "lucide-react";
-import { useState } from "react";
+import { RadarIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { useMap } from "react-leaflet/hooks";
 import { toast } from "sonner";
-import { DefaultMarkerIcon } from "../icons/icons";
+import { LocationMarkerIcon } from "../icons/icons";
 
 function LocateButton() {
   const map = useMap();
@@ -22,7 +22,9 @@ function LocateButton() {
           map.setView([latitude, longitude], 10); // Move map to user's location
         },
         (error) => {
-          toast.error("Location access denied or unavailable.");
+          if(error instanceof Error) {toast.error(error.message)}
+          else {toast.error("Location access denied or unavailable.");}
+          
         }
       );
     } else {
@@ -30,9 +32,13 @@ function LocateButton() {
     }
   };
 
+  useEffect(()=>{
+    locateUser();
+  },[])
+
   return (
     <>
-      <Marker position={[latit, longit]} icon={DefaultMarkerIcon} >
+      <Marker position={[latit, longit]} icon={LocationMarkerIcon} >
         <Popup>Location</Popup>
       </Marker>
       <Button
