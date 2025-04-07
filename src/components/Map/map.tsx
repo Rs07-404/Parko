@@ -1,10 +1,9 @@
 "use client";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import Loading from "@/app/loading";
 import { useTheme } from "next-themes";
-import { DefaultMarkerIcon } from "./icons/icons";
 import LocateButton from "./mapComponents/LocationButton";
 import ZoomAction from "./MapActions/zoomAction";
 
