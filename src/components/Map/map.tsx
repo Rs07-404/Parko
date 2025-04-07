@@ -32,9 +32,6 @@ const Map = () => {
     >
       {/* Map */}
       <TileLayer url={DEFAULT_TILE_LAYER} />
-      <Marker position={DEFAULT_POSITION} icon={DefaultMarkerIcon} >
-        <Popup>Location</Popup>
-      </Marker>
 
       {/* Map Controlls */}
       <ZoomAction /> {/* Hook to handle Ctrl+ and Ctrl- zooming */}
