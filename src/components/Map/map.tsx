@@ -1,19 +1,18 @@
 "use client";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import Loading from "@/app/loading";
 import { useTheme } from "next-themes";
 import LocateButton from "./mapComponents/LocationButton";
 import ZoomAction from "./MapActions/zoomAction";
-import ParkingAreas from "./mapComponents/ParkingAreas";
 
 
 const DEFAULT_POSITION: [number, number] = [-6.792354, 39.208328];
 const DEFAULT_ZOOM = 13;
 
 
-const Map = () => {
+const Map: React.FC<PropsWithChildren> = ({ children }) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const { theme } = useTheme();
   const DEFAULT_TILE_LAYER = theme === "dark" ?
@@ -38,7 +37,7 @@ const Map = () => {
       {/* Map Controlls */}
       <ZoomAction /> {/* Hook to handle Ctrl+ and Ctrl- zooming */}
       <LocateButton /> {/* Button to locate user */}
-      <ParkingAreas />
+      {children}
     </MapContainer>
   )
 }

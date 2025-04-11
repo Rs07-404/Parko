@@ -3,6 +3,7 @@ export interface IUser{
     email: string;
     userName: string;
     mobile: string;
+    roles: string[];
     profile:{
         firstName: string;
         lastName: string;

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_COORDINATES } from "@/constants/constants";
 import { LocateFixed } from "lucide-react";

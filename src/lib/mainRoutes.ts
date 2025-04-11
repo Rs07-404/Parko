@@ -1,10 +1,11 @@
-import { Home, UserCog } from "lucide-react";
+import { Home, LandPlot, ScanLine, UserCog } from "lucide-react";
 
-interface path {
+export interface IPath {
   pathId: string;
   name: string;
   path: string;
   icon: React.ElementType;
+  roles: string[];
   subPaths?: {
     subPathId: string;
     pathId: string;
@@ -14,19 +15,35 @@ interface path {
   }[]
 }
 
-const paths: path[] = [
+const paths: IPath[] = [
   {
     pathId: "MP1", // MainPath[number]
     name: "Home",
     path: "/home",
+    roles: ["Admin", "User", "LandOwner"],
     icon: Home
+  },
+  {
+    pathId: "MP3",
+    name: "Registrations",
+    path: "/registrations",
+    roles: ["Admin"],
+    icon: LandPlot
+  },
+  {
+    pathId: "MP4",
+    name: "Verify Reservations",
+    path: "/verifyreservation",
+    roles: ["Admin", "Operator"],
+    icon: ScanLine
   },
   {
     pathId: "MP2",
     name: "Profile",
     path: "/profile",
+    roles: ["Admin", "User"],
     icon: UserCog
-  }
+  },
   // {
   //   pathId: "MP2",
   //   name: "Settings",
