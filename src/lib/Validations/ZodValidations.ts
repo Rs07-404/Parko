@@ -2,17 +2,17 @@ import { z } from "zod";
 
 
 // Validation for First Name
-export const FirstNameValidation = z.string()
-    .regex(/^[A-Za-z]+$/, "First name must contain only letters")
-    .min(2, "First name must be at least 2 characters long")
+export const FirstNameValidation = z.string().trim()
+    .regex(/^[A-Za-z]+$/, "First name contains only letters")
+    .min(2, "First name must be valid")
 
 // Validation for Last Name
 export const LastNameValidation = z.string()
-    .regex(/^[A-Za-z]+$/, "Last name must contain only letters")
-    .min(2, "Last name must be at least 2 characters long")
+    .regex(/^[A-Za-z]+$/, "Last name contains only letters")
+    .min(2, "Last name must be valid")
 
 // Validation for Mobile Number
-export const MobileValidation = z.string()
+export const MobileValidation = z.string().min(10,"Mobile number must be exactly 10 digits long")
     .regex(/^\d{10}$/, "Mobile number must be exactly 10 digits long")
     .regex(/^[0-9]+$/, "Mobile number must contain only digits")
     .regex(/^(?=.*[0-9])/, "Mobile number must contain at least one number")

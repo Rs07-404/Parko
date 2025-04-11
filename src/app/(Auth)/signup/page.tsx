@@ -90,15 +90,15 @@ const SignUP = () => {
                         <div className="text-muted-foreground text-sm">Please enter details below to proceed</div>
                         <div className="flex flex-col space-y-4 w-full">
                             <div className="flex flex-shrink gap-2">
-                                <InputController type="text" label="First Name" name="firstName" autoComplete="off" className="flex-grow" required />
-                                <InputController type="text" label="Last Name" name="lastName" autoComplete="off" className="flex-grow" required />
+                                <InputController type="text" label="First Name" name="firstName" autoComplete="off" className="flex-grow" />
+                                <InputController type="text" label="Last Name" name="lastName" autoComplete="off" className="flex-grow" />
                             </div>
-                            <div><InputController type="text" label="Email" name="email" autoComplete="off" required /></div>
-                            <div><InputController type="tel" maxLength={10} label="Mobile" name="mobile" autoComplete="off" required /> </div>
-                            <div><InputController type="password" label="Password" name="password" autoComplete="off" required /></div>
-                            <div><InputController type="password" label="Confirm Password" name="confirmPassword" autoComplete="off" required /></div>
+                            <div><InputController type="text" label="Email" name="email" autoComplete="off" /></div>
+                            <div><InputController type="tel" maxLength={10} label="Mobile" name="mobile" autoComplete="off" /> </div>
+                            <div><InputController type="password" label="Password" name="password" autoComplete="off" /></div>
+                            <div><InputController type="password" label="Confirm Password" name="confirmPassword" autoComplete="off" /></div>
                             <Button type="submit">{loading ? <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" /> : "Sign Up"}</Button>
-                            <div className="flex gap-1 items-center">Already have an account? <Button className="cursor-pointer underline p-2 m-0" onClick={() => { redirect("/login") }}>Login</Button></div>
+                            <div className="flex gap-1 items-center">Already have an account? <Button type="button" className="cursor-pointer underline p-2 m-0" onClick={() => { redirect("/login") }}>Login</Button></div>
                         </div>
                     </div>
                     <ScrollBar orientation="vertical" />

@@ -17,8 +17,8 @@ const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const { triggerLogOut, logoutLoading } = useLogOut();
 
     return (
-        <div className={`flex fixed top-0 z-10000 w-full ${open ? "border-none" : ""} h-14 items-center px-2 bg-card border-b-2 dark:border-none box-border`}>
-            <div className={`flex w-max h-full text-2xl justify-center p-2 ${sniglet.className} items-center gap-1`}>{children && children}{open ? "Menu" : "Parko"}</div>
+        <div className={`flex fixed top-0 z-10000 w-full ${open ? "border-none" : ""} h-14 items-center pr-2 bg-card border-b-2 dark:border-none box-border`}>
+            <div className={`flex w-max h-full text-2xl justify-center ${sniglet.className} items-center gap-1`}>{children}{open ? "Menu" : "Parko"}</div>
             <div className="sm:flex w-full m-auto justify-center items-center">
                 {/* <Navbar paths={paths} strictCheck={false} /> */}
             </div>

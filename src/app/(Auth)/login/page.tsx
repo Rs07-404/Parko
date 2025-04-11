@@ -81,7 +81,7 @@ const Login = () => {
                     <InputController type="password" label="Password" name="password" autoComplete="off" />
                     <Button className="btn" type="submit" disabled={loading}>{loading ? <LoaderCircleIcon className="mr-2 h-4 w-4 animate-spin" /> : "Login"}</Button>
                 </div>
-                <div>Create a new account? <span className="cursor-pointer underline" onClick={()=>{redirect("/signup")}}>Sign Up</span></div>
+                <div>Create a new account? <Button type="button" className="cursor-pointer underline p-2 m-0" onClick={() => { redirect("/signup") }}>Sign Up</Button></div>
             </form>
         </FormProvider>
     );
