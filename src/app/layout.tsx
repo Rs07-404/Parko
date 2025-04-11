@@ -57,6 +57,27 @@ export const metadata: Metadata = {
       url: "/favicon.ico",
     },
   ],
+  openGraph: {
+    title: "Parko",
+    description: "Easy Parking",
+    url: "https://parko-orpin.vercel.app",
+    siteName: "Parko",
+    images: [
+      {
+        url: "/android-chrome-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "App Preview Image",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Parko",
+    description: "Easy Parking",
+    images: ["/android-chrome-512x512.png"], // again, full URL is better
+  },
 };
 
 export default function RootLayout({
