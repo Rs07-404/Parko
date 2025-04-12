@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export interface IParkingArea {
     name: string;
+    address: string;
     location: {
         location: {
             type: 'Point';
@@ -21,11 +22,16 @@ const parkingAreaSchema = new mongoose.Schema<IParkingArea>({
         type: String,
         required: true,
     },
+    address: {
+        type: String,
+        required: true,
+    },
     location:{
         location: {
             type: {
                 type: String,
                 enum: ['Point'],
+                default: 'Point',
                 required: true,
             },
             coordinates:{

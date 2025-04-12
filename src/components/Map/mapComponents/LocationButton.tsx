@@ -60,7 +60,7 @@ function LocateButton() {
         <Popup>Location</Popup>
       </Marker>
       <Button
-        className="absolute h-12 w-12 rounded-full p-0! m-0! has-[>svg]:px-0! py-0! [&_svg:not([class*='size-'])]:size-8 bottom-4 right-4 z-1000"
+        className="absolute h-10 w-10 cursor-pointer bg-card-foreground hover:text-primary hover:bg-background transition-all duration-500 dark:bg-background rounded-full p-0! m-0! has-[>svg]:px-0! py-0! [&_svg:not([class*='size-'])]:size-8 bottom-4 right-4 z-1000"
         onClick={locateUser}
       >
         <LocateFixed className={`${locationloading && "text-primary transition-all animate-pulse"}`} />
