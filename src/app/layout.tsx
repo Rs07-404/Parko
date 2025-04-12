@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     siteName: "Parko",
     images: [
       {
-        url: "/android-chrome-512x512.png",
+        url: "/ParkoConcept.png",
         width: 512,
         height: 512,
         alt: "App Preview Image",
@@ -91,8 +91,8 @@ export default function RootLayout({
         <AuthContextProvider>
           <ThemeProvider>
             <Theme>
+                {/* <div className="m-0 mt-14"></div> */}
               <AppLayout>
-                <div className="m-0 mt-14"></div>
                 {children}
               </AppLayout>
               <Toaster position="top-center" richColors={true} />

@@ -4,7 +4,7 @@ import { redirect, usePathname } from "next/navigation";
 import Loading from "@/app/loading";
 import { AuthRoutes, ProtectedRoutes, PublicRoutes, TestRoutes } from "@/lib/routes";
 import Header from "./app-header";
-import { Sidebar, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Sidebar, SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SideBarContent } from "@/components/ui/sidebarContent";
 import { useMounted } from "@/hooks/use-mounted";
 import AuthLayout from "@/components/Auth/Layout";
@@ -72,16 +72,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     if (!isPublicURL && isProtectedURL && authUser) {
         return (
-            <SidebarProvider>
-                <Sidebar collapsible="icon" className="pt-16 bg-card">
+            <SidebarProvider className="p-0 m-0 overflow-hidden">
+                <Sidebar collapsible="icon" className="pt-16 bg-card border-none">
                     <SideBarContent />
                 </Sidebar>
                 <Header>
                     <SidebarTrigger />
                 </Header>
-                <main className="w-full">
-                    {children}
-                </main>
+                <SidebarInset className="w-full h-[100vh] overflow-hidden box-border pt-14 boder-none">
+                    <div className="sm:rounded-tl-md h-full overflow-hidden box-border border">{children}</div>
+                </SidebarInset>
             </SidebarProvider>
 
         )

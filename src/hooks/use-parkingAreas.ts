@@ -1,5 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 
+export interface IBoundary {
+  type: 'Polygon';
+  coordinates: Array<Array<[number, number]>>; // Array of coordinate pairs [lng, lat]
+}
+
 export interface IParkingSpot {
   _id: string;
   spotNumber: string;
@@ -17,10 +22,12 @@ export interface IParkingSpot {
 export interface IParkingArea {
   _id: string;
   name: string;
+  address: string;
   location: {
     type: string;
     coordinates: [number, number]; // [longitude, latitude]
   };
+  boundary: IBoundary;
   parkingSpots: IParkingSpot[];
   // Add more fields if needed
 }

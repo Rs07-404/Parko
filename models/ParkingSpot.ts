@@ -9,6 +9,7 @@ export interface IParkingSpot {
     };
     status: 'available' | 'occupied';
     sensorId?: string;
+    areaId: mongoose.Schema.Types.ObjectId;
 }
 
 const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
@@ -22,7 +23,7 @@ const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
             enum: ['Point'],
             required: true,
         },
-        coordinates:{
+        coordinates: {
             type: [Number],
             required: true,
             validate: {
@@ -41,7 +42,12 @@ const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
     sensorId: {
         type: String,
     },
-}, {timestamps: true});
+    areaId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParkingArea',
+        required: true
+    }
+}, { timestamps: true });
 
 const ParkingSpot = mongoose.models.ParkingSpot || mongoose.model('ParkingSpot', parkingSpotSchema);
 
