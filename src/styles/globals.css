@@ -37,6 +37,11 @@ html body[data-scroll-locked] {
   height: max-content;
 }
 
+.dialog-override {
+  z-index: 1000 !important;
+  position: relative;
+}
+
 
 @keyframes accordian-lr {
   0%{
@@ -86,6 +91,7 @@ html body[data-scroll-locked] {
     --primary-foreground-hover: 210 40% 90%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+    --success: 122 39% 49%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
@@ -135,6 +141,7 @@ html body[data-scroll-locked] {
     --primary-foreground-hover: 222.2 47.4% 20%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
+    --success: 122 39% 49%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
@@ -177,6 +184,7 @@ html body[data-scroll-locked] {
   --color-primary-foreground-hover: hsl(var(--primary-foreground-hover));
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-success: hsl(var(--success));
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-accent: hsl(var(--accent));

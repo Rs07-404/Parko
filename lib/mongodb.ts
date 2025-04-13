@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import registerModels from "./registerModels";
-
-const MONGODB_URI = process.env.MONGODB_URI || "";
+import { MONGODB_URI } from "@root/config/constants";
 
 if (!MONGODB_URI) {
     console.warn("MongoDB URI not found");

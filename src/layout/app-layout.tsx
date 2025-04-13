@@ -10,6 +10,8 @@ import { useMounted } from "@/hooks/use-mounted";
 import AuthLayout from "@/components/Auth/Layout";
 import { useAuthContext } from "@/context/auth-context";
 import PageNotFound from "@/components/ErrorPages/PageNotFound";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -19,8 +21,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const isProtectedURL = !isPublicURL && !isAuthURL && ProtectedRoutes.includes(pathname ?? "");
     const { authUser, authLoading } = useAuthContext();
     const isMounted = useMounted();
-    // const { session, isLoading } = useSession();
-    useEffect(() => {
+
+
+    const setup = async () => {
         if (!authLoading) {
             if (isAuthURL && authUser) {
                 redirect("/home");
@@ -30,6 +33,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 redirect('/login');
             }
         }
+    }
+
+    useEffect(() => {
+        setup();
     }, [authUser])
 
     if (!isMounted || authLoading) {
@@ -72,17 +79,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     if (!isPublicURL && isProtectedURL && authUser) {
         return (
-            <SidebarProvider className="p-0 m-0 overflow-hidden">
-                <Sidebar collapsible="icon" className="pt-16 bg-card border-none">
-                    <SideBarContent />
-                </Sidebar>
-                <Header>
-                    <SidebarTrigger />
-                </Header>
-                <SidebarInset className="w-full h-[100vh] overflow-hidden box-border pt-14 boder-none">
-                    <div className="sm:rounded-tl-md h-full overflow-hidden box-border border">{children}</div>
-                </SidebarInset>
-            </SidebarProvider>
+            <Provider store={store} >
+                <SidebarProvider className="p-0 m-0 overflow-hidden">
+                    <Sidebar collapsible="icon" className="pt-16 bg-card border-none">
+                        <SideBarContent />
+                    </Sidebar>
+                    <Header>
+                        <SidebarTrigger />
+                    </Header>
+                    <SidebarInset className="w-full h-[100vh] overflow-hidden box-border pt-14 boder-none">
+                        <div className="sm:rounded-tl-md h-full overflow-hidden box-border border">{children}</div>
+                    </SidebarInset>
+                </SidebarProvider>
+            </Provider>
 
         )
     }

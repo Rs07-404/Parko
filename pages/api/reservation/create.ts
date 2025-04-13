@@ -19,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const { parkingSpotId, startTime, endTime } = req.body;
+    const { parkingAreaId, parkingSpotId, startTime, endTime } = req.body;
     const userId = (req as GaurdedRequest).user._id; // Added by withRoleGuard middleware
 
     await connectToDatabase();
@@ -34,6 +34,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const overlappingReservation = await Reservation.findOne({
+      userId,
+      parkingAreaId,
       parkingSpotId,
       startTime: { $lte: endTime },
       endTime: { $gte: startTime },
@@ -45,6 +47,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const reservation = new Reservation({
       userId,
+      parkingAreaId,
       parkingSpotId,
       startTime,
       endTime,
@@ -59,6 +62,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     await reservation.save();
 
+    if (!parkingSpot.areaId) {
+      parkingSpot.areaId = parkingAreaId;
+    }
     parkingSpot.status = "occupied";
     await parkingSpot.save();
 
@@ -72,6 +78,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
       }, timeUntilAvailable);
     }
+
 
     return res.status(201).json({
       message: "Reservation created successfully.",
@@ -88,4 +95,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRoleGuard(handler, ["user"]);
+export default withRoleGuard(handler, ["User"]);

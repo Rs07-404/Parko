@@ -13,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await connectToDatabase();
 
-    const { name, location, boundary, area, parkingSpots } = req.body;
+    const { name, location, boundary, area, parkingSpots, columns } = req.body;
 
     const parkingArea = new ParkingArea({
       name,
@@ -21,6 +21,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       boundary,
       area,
       parkingSpots: parkingSpots || [],
+      columns: columns ?? 0
     });
 
     const result = await parkingArea.save();
