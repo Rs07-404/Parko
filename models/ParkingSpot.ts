@@ -10,6 +10,7 @@ export interface IParkingSpot {
     status: 'available' | 'occupied';
     sensorId?: string;
     areaId: mongoose.Schema.Types.ObjectId;
+    disabled: boolean
 }
 
 const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
@@ -46,6 +47,10 @@ const parkingSpotSchema = new mongoose.Schema<IParkingSpot>({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParkingArea',
         required: true
+    },
+    disabled: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true });
 

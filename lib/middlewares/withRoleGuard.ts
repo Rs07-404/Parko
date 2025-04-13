@@ -14,7 +14,7 @@ interface CustomJwtPayload extends JwtPayload {
 export function withRoleGuard(handler: NextApiHandler, allowedRoles: string[]) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const token = req.cookies.token;
+      const token = req.cookies.accessToken;
 
       if (!token) {
         return res.status(401).json({ error: "Unauthorized: Token missing" });

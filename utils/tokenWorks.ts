@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextApiResponse } from "next";
 import { serialize } from "cookie";
-import { JWT_SECRET } from "@root/config/constants";
+import { JWT_SECRET, NODE_ENV } from "@root/config/constants";
 
 export const signUser = (userId: string, roles: string[], res:NextApiResponse) => {
     try{
@@ -16,7 +16,7 @@ export const signUser = (userId: string, roles: string[], res:NextApiResponse) =
             "Set-Cookie",
             serialize("accessToken", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
+                secure: NODE_ENV === "production",
                 path: "/",
                 sameSite: "strict",
                 maxAge: 60 * 60 * 24 * 7,

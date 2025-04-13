@@ -1,4 +1,5 @@
 // Import the necessary libraries
+import { AES_SECRET } from '@root/config/constants';
 import crypto from 'crypto';
 import QRCode from 'qrcode';
 
@@ -9,7 +10,7 @@ interface JsonData {
 
 export const generateQRCode = async (jsonData: JsonData): Promise<string | undefined> => {
     try {
-        const secretKey = process.env.AES_SECRET;
+        const secretKey = AES_SECRET;
         if (!secretKey) {
             throw new Error('AES_SECRET environment variable is not defined');
         }
@@ -37,7 +38,7 @@ export const generateQRCode = async (jsonData: JsonData): Promise<string | undef
 export const decryptEncryptedPayload = (encryptedPayload: string): Promise<JsonData> => {
     return new Promise((resolve, reject) => {
         try {
-            const secretKey = process.env.AES_SECRET;
+            const secretKey = AES_SECRET;
             if (!secretKey) {
                 throw new Error('AES_SECRET environment variable is not defined');
             }

@@ -15,6 +15,7 @@ export interface IParkingArea {
     };
     area?: number;
     parkingSpots?: mongoose.Schema.Types.ObjectId[];
+    columns: number;
 }
 
 const parkingAreaSchema = new mongoose.Schema<IParkingArea>({
@@ -61,7 +62,11 @@ const parkingAreaSchema = new mongoose.Schema<IParkingArea>({
             ref: 'ParkingSpot',
             default: []
         }
-    ]
+    ],
+    columns: {
+        type: Number,
+        requried: true
+    }
 })
 
 const ParkingArea = mongoose.models.ParkingArea || mongoose.model('ParkingArea', parkingAreaSchema);

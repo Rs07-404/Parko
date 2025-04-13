@@ -1,4 +1,4 @@
-import { LoaderCircleIcon, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import paths, { IPath } from "@/lib/mainRoutes";
 import { redirect, usePathname } from "next/navigation";
@@ -10,6 +10,7 @@ import { TooltipTrigger } from "@radix-ui/react-tooltip";
 import { useAuthContext } from "@/context/auth-context";
 import { useEffect, useState } from "react";
 import { useScreenType } from "@/hooks/useScreenType";
+import InlineLoader from "./inline-loader";
 
 export function SideBarContent() {
   const { setOpen, state, setOpenMobile } = useSidebar();
@@ -93,7 +94,7 @@ export function SideBarContent() {
           onClick={triggerLogOut}
           className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          {logoutLoading ? <LoaderCircleIcon className="h-5 w-5 animate-spin" /> : <LogOut className="w-5 h-5" />}
+          {logoutLoading ? <InlineLoader/> : <LogOut className="w-5 h-5" />}
           {state == "expanded" && <span>Logout</span>}
         </Link>
       </SidebarFooter>

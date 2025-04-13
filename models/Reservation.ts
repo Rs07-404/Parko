@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 export interface IReservationData {
     userId: mongoose.Schema.Types.ObjectId;
     parkingSpotId: mongoose.Schema.Types.ObjectId;
+    parkingAreaId: mongoose.Schema.Types.ObjectId;
     startTime: Date;
     endTime: Date;
     status?: string;
@@ -16,11 +17,11 @@ const reservationSchema = new mongoose.Schema<IReservationData>({
         ref: 'User',
         required: true,
     },
-    // parkingAreaId: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'User',
-    //     required: true
-    // },
+    parkingAreaId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ParkingArea',
+        required: true
+    },
     parkingSpotId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParkingSpot',
