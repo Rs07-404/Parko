@@ -4,6 +4,7 @@ import ParkingSpot from "@root/models/ParkingSpot";
 import User from "@root/models/User";
 import Vehicle from "@root/models/Vehicle";
 import Reservation from "@root/models/Reservation";
+import PushSubscription from "@root/models/PushSubscription";
 
 type MongooseModels = {
   User: typeof User;
@@ -11,6 +12,7 @@ type MongooseModels = {
   ParkingSpot: typeof ParkingSpot;
   Vehicle: typeof Vehicle;
   Reservation: typeof Reservation;
+  PushSubscription: typeof PushSubscription;
 };
 
 const registerModels = () => {
@@ -19,7 +21,8 @@ const registerModels = () => {
     ParkingArea,
     ParkingSpot,
     Vehicle,
-    Reservation
+    Reservation,
+    PushSubscription
   };
 
   Object.entries(models).forEach(([name, model]) => {

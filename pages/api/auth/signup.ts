@@ -31,6 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             mobile,
             // gender,
             roles: ["User"],
+            currentReservation: null,
+            parkingArea: null
         });
 
         // If user created save user to db

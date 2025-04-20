@@ -16,7 +16,9 @@ export interface IUserDocument extends mongoose.Document {
   gender: string;
   vehicles: mongoose.Types.ObjectId[];
   reservations: mongoose.Types.ObjectId[];
+  currentReservation: mongoose.Types.ObjectId;
   qrcode: string;
+  parkingArea: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -55,7 +57,7 @@ const UserSchema = new mongoose.Schema<IUserDocument>({
   },
   roles: {
     type: [String],
-    enum: ["User", "LandOwner", "Admin", "Operator"],
+    enum: ["User", "LandOwner", "Admin", "EntryOperator", "ExitOperator"],
     default: ["User"],
     required: true,
     validate: {
@@ -81,12 +83,27 @@ const UserSchema = new mongoose.Schema<IUserDocument>({
   }],
   reservations: [{
     type: mongoose.Schema.Types.ObjectId,
-    res: 'Reservation',
+    ref: 'Reservation',
     default: [],
   }],
+  currentReservation: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Reservation',
+    default: null
+  },
   qrcode: {
     type: String,
     default: '',
+  },
+  
+  // For Operators only
+  parkingArea: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ParkingArea',
+    required: function() {
+      return this.roles?.includes("EntryOperator") || this.roles?.includes("ExitOperator");
+    },
+    default: null
   }
 }, { timestamps: true });
 

@@ -6,10 +6,11 @@ import SpotSelectionModal from "@/components/Reservation/SpotSelectionModal";
 import { useDispatch } from "react-redux";
 import fetchCurrentReservation from "@/actions/reservation/get-current-reservation";
 import { setReservation } from "@/store/slices/ReservationSlice";
+import registerPush from "@/actions/registerPush";
 
 
 export default function Home() {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const getReservation = async () => {
         const currentTime = new Date();
         try {
@@ -25,6 +26,10 @@ export default function Home() {
     }
     useEffect(() => {
         getReservation();
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            registerPush();
+        }
+
     }, [])
     return (
         <>

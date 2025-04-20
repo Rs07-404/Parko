@@ -3,12 +3,16 @@ import mongoose from "mongoose";
 // interface for reservation data
 export interface IReservationData {
     userId: mongoose.Schema.Types.ObjectId;
-    parkingSpotId: mongoose.Schema.Types.ObjectId;
     parkingAreaId: mongoose.Schema.Types.ObjectId;
+    parkingSpots: mongoose.Schema.Types.ObjectId[];
     startTime: Date;
     endTime: Date;
     status?: string;
+    bookingTime: Date;
+    entryTime: Date;
+    exitTime: Date;
     verified?: boolean;
+    ticketKey: string;
 }
 
 const reservationSchema = new mongoose.Schema<IReservationData>({
@@ -22,9 +26,13 @@ const reservationSchema = new mongoose.Schema<IReservationData>({
         ref: 'ParkingArea',
         required: true
     },
-    parkingSpotId: {
+    parkingSpots: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ParkingSpot',
+        required: true,
+    }],
+    ticketKey: {
+        type: String,
         required: true,
     },
     // vehicleId: {
@@ -32,18 +40,22 @@ const reservationSchema = new mongoose.Schema<IReservationData>({
     //     ref:'Vehicle',
     //     required: true,
     // },
-    startTime: {
+    bookingTime: {
         type: Date,
         required: true,
     },
-    endTime: {
+    entryTime: {
         type: Date,
-        required: true,
+        required: false,
+    },
+    exitTime: {
+        type: Date,
+        required: false,
     },
     status:{
         type: String,
-        enum: ['confirmed','parked','completed','canceled'],
-        default: 'confirmed',
+        enum: ['booked','entered','closed','canceled'],
+        default: 'booked',
     },
     verified: {
         type: Boolean,
