@@ -26,7 +26,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const setup = async () => {
         if (!authLoading) {
             if (isAuthURL && authUser) {
-                redirect("/home");
+                if (authUser.roles.includes("Admin")) {
+                    redirect("/operator-management");
+                } else if (authUser.roles.includes("EntryOperator") || authUser.roles.includes("ExitOperator")) {
+                    redirect("/verify-reservation");
+                } else if (authUser.roles.includes("User")) {
+                    redirect("/home");
+                } else if (authUser.roles.includes("LandOwner")) {
+                    redirect("/home");
+                }
             }
 
             if (isProtectedURL && !authUser) {
@@ -94,6 +102,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Provider>
 
         )
+    } else if (isProtectedURL && !authUser) {
+        redirect("/login");
     }
 
     return <PageNotFound />;

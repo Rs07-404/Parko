@@ -8,12 +8,13 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "../ui/scroll-area"
 import { useAllOperators } from "@/hooks/admin/use-operators"
 import { IUser } from "@/interfaces/IUser"
-
+import { CreateOperatorDialog } from "./CreateOperatorModal"
 
 
 export default function OperatorsTable() {
     const [searchTerm, setSearchTerm] = useState("")
-    const {allOperators, AllOperatorsLoading, fetchAllOperators, error} = useAllOperators();
+    const {allOperators, fetchAllOperators} = useAllOperators();
+    const [showCreateOperatorModal, setShowCreateOperatorModal] = useState(false);
 
     // Filter operators based on search term
     const filteredOperators = allOperators?.filter((operator) => {
@@ -41,7 +42,7 @@ export default function OperatorsTable() {
     return (
         <div className="flex flex-col w-full h-full rounded-lg bg-card">
             <div className="p-4 flex justify-between items-center">
-                <Button className="flex items-center gap-1">
+                <Button className="flex items-center gap-1" onClick={() => setShowCreateOperatorModal(true)}>
                     <Plus className="h-4 w-4" />
                     Create Operator
                 </Button>
@@ -123,6 +124,7 @@ export default function OperatorsTable() {
                     </ScrollArea>
                 </div>
             </div>
+            <CreateOperatorDialog open={showCreateOperatorModal} onOpenChange={setShowCreateOperatorModal} postSubmitActions={fetchAllOperators} />
         </div>
     )
 }

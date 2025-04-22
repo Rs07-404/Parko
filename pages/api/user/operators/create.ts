@@ -25,7 +25,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       firstName,
       lastName,
       parkingArea
-    } = req.body;
+    } = await JSON.parse(req.body);
 
     if (!email || !userName || !password || !mobile || !firstName || !lastName || !role) {
       return res.status(400).json({ message: "Missing required fields." });

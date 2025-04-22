@@ -9,8 +9,8 @@ import { withRoleGuard } from "@root/lib/middlewares/withRoleGuard";
 import User from "@root/models/User";
 
 /**
- * @description Verifies a parking reservation based on QR code in an image for exit
- * @route POST /api/reservations/verifyExit
+ * @description Verifies a parking reservation based on QR code in an image for entry
+ * @route POST /api/reservations/verifyEntry
  * @access Operators and Admins
  */
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -40,8 +40,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectToDatabase();
 
     const data = await decryptEncryptedPayload(encryptedPayload);
-    
-    if (!data?.userId) {
+    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.parkingSpots || !data?.bookingTime || !data?.status || !data?.parkingAreaName) {
       return res.status(400).json({ message: "Invalid Key or Image" });
     }
 
@@ -62,23 +61,48 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
+    // Check if current reservation is same as the reservationid in the data
+    if (user.currentReservation !== data.reservationid) {
+      return res.status(400).json({
+        message: "Current reservation is not the same in the image or key"
+      });
+    }
 
     const existingReservation = await Reservation.findById(user.currentReservation);
 
     if (existingReservation) {
-      existingReservation.verified = true;
-      existingReservation.entryTime = currentTime;
-      existingReservation.status = "entered";
-      await existingReservation.save();
-
-      return res.status(200).json({
-        message: "Entry verified",
+      // switch case for status
+      switch (existingReservation.status) {
+        case "Entered":
+          return res.status(400).json({
+            message: "Current reservation is already verified and entered"
+          });
+        case "Booked":
+          existingReservation.verified = true;
+          existingReservation.entryTime = currentTime;
+          existingReservation.status = "Entered";
+          await existingReservation.save();
+          return res.status(200).json({
+            message: "Entry verified",
+          });
+        case "Cancelled":
+          return res.status(400).json({
+            message: "Current reservation is cancelled"
+          });
+        case "Completed":
+          return res.status(400).json({
+            message: "Current reservation is completed"
+          });
+        default:
+          return res.status(400).json({
+            message: "Reservation is invalid"
+          });
+      }
+    } else {
+      return res.status(400).json({
+        message: "No Current Reservation Found"
       });
     }
-
-    return res.status(200).json({
-      message: "No reservations found during the current time for the given parking area.",
-    });
 
   } catch (error) {
     console.error("Error verifying reservation:", (error as Error).message);

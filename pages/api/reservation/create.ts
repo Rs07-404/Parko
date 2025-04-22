@@ -9,7 +9,9 @@ import User from "@root/models/User";
 import { GaurdedRequest } from "@root/lib/interfaces/IRequest";
 import { reservationQueue } from "@root/lib/queue";
 import { sendPushNotification } from "@root/utils/pushNotification";
-
+import { generateQRCode } from "@root/utils/qrcodeworks";
+import Ticket from "@root/models/Ticket";
+import mongoose from "mongoose";
 /**
  * @description Creates a reservation for multiple parking spots.
  * @route POST /api/reservations/create
@@ -47,8 +49,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
+    
     // Check for overlapping reservations for each of the selected parking spots
-
+    
     // Create a new reservation for multiple parking spots
     const reservation = new Reservation({
       userId,
@@ -57,6 +60,32 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       bookingTime: new Date(),
       status: "confirmed",
     });
+    
+    const svgQrcode = await generateQRCode({
+      reservationid: reservation._id.toString(),
+      parkingAreaId: parkingAreaId.toString(),
+      parkingSpots: parkingSpots.map((spot:string) => spot.toString()),
+      bookingTime: reservation.bookingTime.toISOString(),
+      status: reservation.status,
+      userId: userId.toString(),
+      parkingAreaName: parkingAreaId.name,
+    });
+
+    if(!svgQrcode){
+      return res.status(500).json({ error: "Error generating Ticket" });
+    }
+
+    const newTicket = new Ticket({
+      qrcode: svgQrcode,
+    });
+
+    if(!newTicket){
+      return res.status(500).json({ error: "Error generating Ticket" });
+    }
+
+    await newTicket.save();
+
+    reservation.ticketKey = newTicket._id;
 
     const user = await User.findById(userId);
     if (user) {
@@ -65,13 +94,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       await user.save();
     }
 
-    await reservation.save();
-
-    // Update parking spots' status to "occupied"
-    await ParkingSpot.updateMany(
-      { '_id': { $in: parkingSpots } },
-      { $set: { status: 'occupied', areaId: parkingAreaId } }
-    );
+    // Transaction to save reservation and update parking spots' status
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      await reservation.save({ session });
+      await ParkingSpot.updateMany(
+        { '_id': { $in: parkingSpots } },
+        { $set: { status: 'occupied', areaId: parkingAreaId } },
+        { session }
+      );
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw new Error("Error in creating reservation");
+    } finally {
+      session.endSession();
+    }
 
     // Optionally handle status reset after reservation ends
     await reservationQueue.add(

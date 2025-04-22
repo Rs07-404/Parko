@@ -94,7 +94,7 @@ const SpotSelectionModal: React.FC<React.ComponentProps<typeof Dialog>> = (props
                 credentials: "include",
                 body: JSON.stringify({
                     parkingAreaId: selectedParkingArea._id,
-                    parkingSpot: selectedSpots,
+                    parkingSpots: selectedSpots,
                 }),
             });
 

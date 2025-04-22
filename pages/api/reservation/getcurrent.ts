@@ -26,7 +26,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             return res.status(404).json({ message: "No Reservations Found" })
         }
 
-        const currentReservation = await Reservation.findById({currentReservationId});
+        // select name and address of parkingAreaId
+        const currentReservation = await Reservation.findById({currentReservationId})
+        .populate('ticketKey')
+        .populate('parkingAreaId', 'name address');
 
         //TODO: currentTime undefined.....
 

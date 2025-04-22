@@ -1,4 +1,4 @@
-import { Home, LandPlot, ScanLine, UserCog, UserCog2 } from "lucide-react";
+import { CalendarClock, Home, LandPlot, ScanLine, UserCog, UserCog2 } from "lucide-react";
 
 export interface IPath {
   pathId: string;
@@ -24,6 +24,13 @@ const paths: IPath[] = [
     icon: Home
   },
   {
+    pathId: "MP2",
+    name: "Your Reservations",
+    path: "/reservations",
+    roles: ["User"],
+    icon: CalendarClock
+  },
+  {
     pathId: "MP3",
     name: "Registrations",
     path: "/registrations",
@@ -33,7 +40,7 @@ const paths: IPath[] = [
   {
     pathId: "MP4",
     name: "Verify Reservations",
-    path: "/verifyreservation",
+    path: "/verify-reservation",
     roles: ["Admin", "EntryOperator", "ExitOperator"],
     icon: ScanLine
   },

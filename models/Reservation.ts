@@ -12,7 +12,7 @@ export interface IReservationData {
     entryTime: Date;
     exitTime: Date;
     verified?: boolean;
-    ticketKey: string;
+    ticketKey: mongoose.Schema.Types.ObjectId;
 }
 
 const reservationSchema = new mongoose.Schema<IReservationData>({
@@ -32,7 +32,8 @@ const reservationSchema = new mongoose.Schema<IReservationData>({
         required: true,
     }],
     ticketKey: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Ticket',
         required: true,
     },
     // vehicleId: {
@@ -54,7 +55,7 @@ const reservationSchema = new mongoose.Schema<IReservationData>({
     },
     status:{
         type: String,
-        enum: ['booked','entered','closed','canceled'],
+        enum: ['Booked','Entered','Completed','Canceled'],
         default: 'booked',
     },
     verified: {
