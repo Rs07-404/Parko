@@ -1,42 +1,33 @@
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { cn } from "@/lib/utils"
-import { Check, ChevronsUpDown, X } from "lucide-react"
-import { HTMLAttributes } from "react"
-import { Control, FieldValues, Path, PathValue, useFormContext } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+// import { HTMLAttributes } from "react"
+// import { Control, FieldValues, Path, PathValue } from "react-hook-form"
 
-interface IComboBoxControllerProps<T extends FieldValues>
-  extends HTMLAttributes<HTMLDivElement> {
-  control?: Control<T>
-  name: Path<T>
-  label: string
-  description?: string
-  className?: string
-  placeholder?: string
-  defaultValue?: PathValue<T, Path<T>> | undefined
-  disabled?: boolean
-  required?: boolean
-  reset?: boolean
-  options: { value: string; label: string }[]
-}
+// interface IComboBoxControllerProps<T extends FieldValues>
+//   extends HTMLAttributes<HTMLDivElement> {
+//   control?: Control<T>
+//   name: Path<T>
+//   label: string
+//   description?: string
+//   className?: string
+//   placeholder?: string
+//   defaultValue?: PathValue<T, Path<T>> | undefined
+//   disabled?: boolean
+//   required?: boolean
+//   reset?: boolean
+//   options: { value: string; label: string }[]
+// }
 
-export const ComboBoxController = <T extends FieldValues>({
-  name,
-  label,
-  reset,
-  options,
-  ...rest
-}: IComboBoxControllerProps<T>) => {
-  const form = useFormContext()
+export const ComboBoxController = 
+// <T extends FieldValues>
+(
+//   {
+//   name,
+//   label,
+//   reset,
+//   options,
+//   ...rest
+// }: IComboBoxControllerProps<T>
+) => {
+  // const form = useFormContext()
 
   return (
     // <FormField

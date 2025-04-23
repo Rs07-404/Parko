@@ -44,7 +44,7 @@ interface CreateOperatorDialogProps {
 
 export function CreateOperatorDialog({ open, onOpenChange, postSubmitActions }: CreateOperatorDialogProps) {
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const { allParkingAreas, AllAreaLoading } = useAllParkingAreas()
+    const { allParkingAreas } = useAllParkingAreas()
     const [formData, setFormData] = useState<CreateOperatorFormValues>({
         firstName: "",
         lastName: "",
