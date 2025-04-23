@@ -154,7 +154,7 @@ export default function OperatorsTable() {
                     </DialogDescription>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setOperatorToDelete(null)}>Cancel</Button>
-                        <Button variant="destructive" onClick={() => handleDelete(operatorToDelete._id)}>Delete</Button>
+                        <Button variant="destructive" onClick={() => operatorToDelete && handleDelete(operatorToDelete._id)}>Delete</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
