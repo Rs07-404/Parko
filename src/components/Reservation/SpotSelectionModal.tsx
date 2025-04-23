@@ -8,10 +8,8 @@ import { Button } from "../ui/button";
 import { Dot } from "lucide-react";
 import { sniglet } from "@/styles/fonts/Fonts";
 import { toast } from "sonner";
-import { Select } from "../ui/custom-select";
-import { SelectGroup, SelectItem, SelectLabel } from "../ui/select";
-import { setReservation } from "@/store/slices/ReservationSlice";
 import InlineLoader from "../ui/inline-loader";
+import { setReservation } from "@/store/slices/ReservationSlice";
 
 
 const SpotSelectionModal: React.FC<React.ComponentProps<typeof Dialog>> = (props) => {

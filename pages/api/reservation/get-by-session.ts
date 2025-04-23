@@ -26,6 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             data: reservations,
         });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({ message: "Internal server error" });
     }
 }

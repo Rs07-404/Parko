@@ -48,7 +48,6 @@ export const SelectController = <T extends FieldValues>({
             <Select
               onValueChange={(value) => {
                 field.onChange(value)
-                form.setValue(name as Path<T>, value as any, { shouldValidate: true })
                 rest.onValueChange?.(value)
               }}
               value={field.value}

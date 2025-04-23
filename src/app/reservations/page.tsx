@@ -6,7 +6,7 @@ import { useAllReservations } from "@/hooks/use-reservationst";
 // Sample reservation data
 
 export default function Home() {
-    const {reservations, reservationsLoading, fetchAllReservations} = useAllReservations(); 
+    const {reservations} = useAllReservations(); 
     return (
         <main className="container mx-auto p-4 md:p-8">
             <h1 className="text-2xl font-bold mb-6">Your Parking Reservations</h1>

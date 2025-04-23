@@ -1,9 +1,9 @@
-import { IReservationData } from "@/interfaces/Generic/IReservation";
+import { IReservation, IReservationData } from "@/interfaces/Generic/IReservation";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 export interface ReservationSliceType{
-    reservation: IReservationData | null;
+    reservation: IReservationData | IReservation | null;
 }
 const initialState:ReservationSliceType = {
     reservation: null

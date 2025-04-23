@@ -1,5 +1,4 @@
 import { IParkingArea } from "./IParkingArea";
-import { IParkingSpot } from "./IParkingSpot";
 import { ITicketKey } from "./ITicketKey";
 export interface IReservationData {
     _id: string;

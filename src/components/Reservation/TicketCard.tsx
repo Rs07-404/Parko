@@ -1,7 +1,5 @@
 import { format } from "date-fns"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { Clock, MapPin } from "lucide-react"
 import { IReservation } from "@/interfaces/Generic/IReservation";
 // Define the status types and their corresponding colors
@@ -12,26 +10,6 @@ const statusConfig = {
   Canceled: { label: "Canceled", color: "text-red-500" },
 }
 
-// Type definitions for the reservation payload
-interface ParkingArea {
-  _id: string
-  name: string
-  address: string
-}
-
-interface ParkingSpot {
-  spotId: string
-  spotNumber: string
-}
-
-interface TicketKey {
-  _id: string
-  qrcode: string
-}
-
-interface Reservation {
-
-}
 
 export function TicketCard({ reservation }: { reservation: IReservation }) {
   const { parkingAreaId, parkingSpots, ticketKey, bookingTime, entryTime, exitTime, status } = reservation
@@ -45,7 +23,7 @@ export function TicketCard({ reservation }: { reservation: IReservation }) {
 
   return (
     <div className="w-full max-w-sm mx-auto">
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-fuchsia-300 to-purple-400 dark:from-[rgba(255,0,128,0.1)] dark:to-[rgba(128,0,255,0.1)]
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-pink-100 to-purple-200 dark:from-[rgba(255,0,128,0.1)] dark:to-[rgba(128,0,255,0.1)]
  text-foreground shadow-lg">
         {/* Top notches */}
         <div className="absolute left-0 top-27/40 h-5 w-5 -translate-x-1/2 rounded-full bg-card"></div>
@@ -105,33 +83,33 @@ export function TicketCard({ reservation }: { reservation: IReservation }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h4 className="text-xs font-medium opacity-80">ENTRY TIME</h4>
-              <p className="mt-1">{entryTime ? format(new Date(entryTime), "h:mm a, MMM dd") : "Not entered yet"}</p>
+              <p className="mt-1 text-sm">{entryTime ? format(new Date(entryTime), "h:mm a, MMM dd") : "Not entered yet"}</p>
             </div>
             <div>
               <h4 className="text-xs font-medium opacity-80">EXIT TIME</h4>
-              <p className="mt-1">
+              <p className="mt-1 text-sm">
                 {status === "Completed" && exitTime ? format(new Date(exitTime), "h:mm a, MMM dd") : "Not exited yet"}
               </p>
             </div>
           </div>
 
-          {/* Spot information
+          {/* Spot information */}
           <div className="mt-4">
             <h4 className="text-xs font-medium opacity-80">SPOT</h4>
             <div className="flex flex-wrap gap-2 mt-1">
               {parkingSpots && parkingSpots.length > 0 ? (
                 parkingSpots.map((spot) => (
-                  <Badge key={spot._id} variant="outline" className="text-white border-white">
+                  <Badge key={spot._id} variant="outline" className="border-card-foreground">
                     Spot {spot.spotNumber || "N/A"}
                   </Badge>
                 ))
               ) : (
-                <Badge variant="outline" className="text-white border-white">
+                <Badge variant="outline" className="border-card-foreground">
                   No spots assigned
                 </Badge>
               )}
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

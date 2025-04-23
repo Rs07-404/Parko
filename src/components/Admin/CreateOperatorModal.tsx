@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { useAllParkingAreas } from "@/hooks/use-parkingAreas"
 
 import {
@@ -16,13 +14,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Form } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
-import { FloatingLabelInput } from "../ui/floating-input"
 import { SelectController } from "../FormControls/selectController"
-import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from "@/components/ui/tooltip"
 import { EmailValidation, FirstNameValidation, LastNameValidation, MobileValidation, PasswordValidation } from "@/lib/Validations/ZodValidations"
 import { SearchableSelectController } from "../FormControls/SearchableSelectController"
 import { toast } from "sonner"
@@ -40,7 +34,7 @@ const formSchema = z.object({
     parkingArea: z.string().min(1, "Please select a parking area"),
 })
 
-type FormValues = z.infer<typeof formSchema>
+export type CreateOperatorFormValues = z.infer<typeof formSchema>
 
 interface CreateOperatorDialogProps {
     open: boolean
@@ -51,7 +45,7 @@ interface CreateOperatorDialogProps {
 export function CreateOperatorDialog({ open, onOpenChange, postSubmitActions }: CreateOperatorDialogProps) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { allParkingAreas, AllAreaLoading } = useAllParkingAreas()
-    const [formData, setFormData] = useState<FormValues>({
+    const [formData, setFormData] = useState<CreateOperatorFormValues>({
         firstName: "",
         lastName: "",
         email: "",
@@ -61,7 +55,7 @@ export function CreateOperatorDialog({ open, onOpenChange, postSubmitActions }: 
         parkingArea: "",
     });
 
-    const form = useForm<FormValues>({
+    const form = useForm<CreateOperatorFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             firstName: "",
@@ -84,11 +78,11 @@ export function CreateOperatorDialog({ open, onOpenChange, postSubmitActions }: 
         form.setValue("parkingArea", formData.parkingArea, { shouldValidate: true })
     }, [formData])
 
-    const handleSubmit = async (values: FormValues) => {
+    const handleSubmit = async (values: CreateOperatorFormValues) => {
         setIsSubmitting(true)
         const { firstName, lastName, email, password, role, mobile, parkingArea } = formData
 
-        if (!firstName || !lastName || !email || !password || !role || !mobile || !parkingArea) {
+        if (!firstName || !lastName || !email || !password || !role || !mobile || !parkingArea || !values) {
             toast.error("Please fill in all fields")
             setIsSubmitting(false)
             return

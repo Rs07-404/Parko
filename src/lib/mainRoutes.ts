@@ -1,4 +1,4 @@
-import { CalendarClock, Home, LandPlot, ScanLine, UserCog, UserCog2 } from "lucide-react";
+import { CalendarClock, Home, LandPlot, ScanLine, UserCog } from "lucide-react";
 
 export interface IPath {
   pathId: string;

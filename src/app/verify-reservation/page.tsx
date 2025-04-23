@@ -42,6 +42,7 @@ export default function VerifyReservationsPage() {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error(error);
       toast.error("Failed to verify QR code");
     }
   }
@@ -74,6 +75,7 @@ export default function VerifyReservationsPage() {
       // Clear the input - focus will be maintained by useEffect
       setBarcodeValue("")
     } catch (error) {
+      console.error(error)
       toast.error("Failed to verify barcode");
     }
   }
