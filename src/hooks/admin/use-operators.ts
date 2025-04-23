@@ -1,5 +1,5 @@
 import { IUser } from "@/interfaces/IUser";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState} from "react";
 
 
 export function useAllOperators() {
@@ -7,7 +7,7 @@ export function useAllOperators() {
   const [AllOperatorsLoading, setAllOperatorsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAllOperators = useCallback(async () => {
+  const fetchAllOperators = async () => {
     try {
       setAllOperatorsLoading(true);
       setError(null);
@@ -23,11 +23,11 @@ export function useAllOperators() {
     } finally {
       setAllOperatorsLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchAllOperators();
-  }, [fetchAllOperators]);
+  }, []);
 
   return {
     allOperators,

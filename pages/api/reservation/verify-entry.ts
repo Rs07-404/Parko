@@ -40,7 +40,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectToDatabase();
 
     const data = await decryptEncryptedPayload(encryptedPayload);
-    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.parkingSpots || !data?.bookingTime || !data?.status || !data?.parkingAreaName) {
+    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.bookingTime || !data?.parkingAreaName) {
       return res.status(400).json({ message: "Invalid Key or Image" });
     }
 

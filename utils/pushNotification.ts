@@ -10,21 +10,34 @@ webpush.setVapidDetails(
   VAPID_PRIVATE_KEY!
 );
 
-async function getSubscriptionByUserId(userId: string) {
-  return await PushSubscription.findOne({ userId });
+async function getSubscriptionsByUserId(userId: string) {
+  return await PushSubscription.find({ userId });
 }
 
 export async function sendPushNotification({ userId, title, body }: { userId: string, title: string, body: string }) {
-  // Get user's subscription from DB
+  // Get all user's subscriptions from DB
   await connectToDatabase();
-  const subscription = await getSubscriptionByUserId(userId);
-  if (!subscription) return;
+  const subscriptions = await getSubscriptionsByUserId(userId);
+  if (!subscriptions || subscriptions.length === 0) return;
 
   const payload = JSON.stringify({ title, body, url: '/reservations' });
 
+  // Send notifications to all devices in parallel
+  const notificationPromises = subscriptions.map(subscription => 
+    webpush.sendNotification(subscription, payload)
+      .catch(err => {
+        console.error(`Push failed for subscription ${subscription._id}:`, err);
+        // If the subscription is no longer valid, remove it from the database
+        if (err.statusCode === 410) {
+          return PushSubscription.findByIdAndDelete(subscription._id);
+        }
+        return null;
+      })
+  );
+
   try {
-    await webpush.sendNotification(subscription, payload);
+    await Promise.all(notificationPromises);
   } catch (err) {
-    console.error('Push failed:', err);
+    console.error('Error sending notifications:', err);
   }
 }

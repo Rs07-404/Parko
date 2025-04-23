@@ -9,12 +9,16 @@ import { ScrollArea } from "../ui/scroll-area"
 import { useAllOperators } from "@/hooks/admin/use-operators"
 import { IUser } from "@/interfaces/IUser"
 import { CreateOperatorDialog } from "./CreateOperatorModal"
+import { toast } from "sonner"
+import deleteOperator from "@/actions/operator/deleteOperator"
+import { Dialog, DialogDescription, DialogHeader, DialogContent, DialogFooter } from "../ui/dialog"
 
 
 export default function OperatorsTable() {
     const [searchTerm, setSearchTerm] = useState("")
     const {allOperators, fetchAllOperators} = useAllOperators();
     const [showCreateOperatorModal, setShowCreateOperatorModal] = useState(false);
+    const [operatorToDelete, setOperatorToDelete] = useState<IUser | null>(null);
 
     // Filter operators based on search term
     const filteredOperators = allOperators?.filter((operator) => {
@@ -34,9 +38,25 @@ export default function OperatorsTable() {
         // Implement edit functionality
     }
 
-    const handleDelete = (operator: IUser) => {
-        console.log("Delete operator:", operator)
+    const handleDelete = async (operatorId: string) => {
         // Implement delete functionality
+        try{
+            const response = await deleteOperator(operatorId);
+            if(response.ok){
+                toast.success("Operator deleted successfully");
+                setOperatorToDelete(null);
+                fetchAllOperators();
+            }else{
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to delete operator");
+            }
+        }catch(error){
+            if(error instanceof Error){
+                toast.error(error.message);
+            }else{
+                toast.error("Failed to delete operator");
+            }
+        }
     }
 
     return (
@@ -102,7 +122,7 @@ export default function OperatorsTable() {
                                                         <Edit className="h-4 w-4" />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(operator)}
+                                                        onClick={() => setOperatorToDelete(operator)}
                                                         className="h-8 w-8 p-0 text-destructive hover:text-destructive/80"
                                                     >
                                                         <span className="sr-only">Delete</span>
@@ -124,6 +144,20 @@ export default function OperatorsTable() {
                     </ScrollArea>
                 </div>
             </div>
+            <Dialog open={!!operatorToDelete} onOpenChange={() => setOperatorToDelete(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        Delete Operator
+                    </DialogHeader>
+                    <DialogDescription>
+                        Do you want to delete account of {operatorToDelete?.profile.firstName} {operatorToDelete?.profile.lastName}?
+                    </DialogDescription>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setOperatorToDelete(null)}>Cancel</Button>
+                        <Button variant="destructive" onClick={() => handleDelete(operatorToDelete._id)}>Delete</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
             <CreateOperatorDialog open={showCreateOperatorModal} onOpenChange={setShowCreateOperatorModal} postSubmitActions={fetchAllOperators} />
         </div>
     )

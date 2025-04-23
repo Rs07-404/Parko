@@ -11,12 +11,15 @@ import { useAllParkingAreas } from "@/hooks/use-parkingAreas";
 import { IParkingArea } from "@/interfaces/Generic/IParkingArea";
 import { useDispatch } from "react-redux";
 import { selectParkingArea } from "@/store/slices/ParkingAreaSlice";
+import { useAuthContext } from "@/context/auth-context";
+import { toast } from "sonner";
 
 
 
 
 const ParkingAreas = () => {
   const { allParkingAreas, fetchAllParkingAreas, AllAreaLoading } = useAllParkingAreas();
+  const { authUser } = useAuthContext();
 
   const getMarkerIcon = (status: IParkingSpot["status"]) => {
     switch (status) {
@@ -39,7 +42,13 @@ const ParkingAreas = () => {
           <Separator className="w-full" />
           <CardContent className="flex flex-col p-0 pt-0 items-center justify-center gap-2">
             <div className="flex w-full items-center justify-center gap-1">Spots Available: <span className="text-green-500">{availableSpots}</span></div>
-            <div className="flex w-full items-center justify-center"><Button type="button" onClick={() => dispatch(selectParkingArea(parkingArea))} variant={"secondary"}>View Spots</Button></div>
+            <div className="flex w-full items-center justify-center">
+              <Button type="button"
+                onClick={() => authUser?.currentReservation? toast.error("You already have an ongoing reservation") : dispatch(selectParkingArea(parkingArea))}
+                variant={"secondary"}>
+                View Spots
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </Popup>

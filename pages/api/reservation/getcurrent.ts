@@ -17,8 +17,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     try {
-        const userId = (req as GaurdedRequest).user._id;
-        const currentReservationId = (req as GaurdedRequest).user.currentReservation // Added by withRoleGuard middleware
+        const currentReservationId = (req as GaurdedRequest).user.currentReservation.toString() // Added by withRoleGuard middleware
 
         await connectToDatabase();
 
@@ -27,7 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
 
         // select name and address of parkingAreaId
-        const currentReservation = await Reservation.findById({currentReservationId})
+        const currentReservation = await Reservation.findById(currentReservationId)
         .populate('ticketKey')
         .populate('parkingAreaId', 'name address');
 

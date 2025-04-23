@@ -5,8 +5,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { withRoleGuard } from "@root/lib/middlewares/withRoleGuard";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+    if(req.method !== "DELETE"){
+        return res.status(405).json({ error: "Method not allowed" });
+    }
     try {
-        const { operatorId } = req.body;
+        const { operatorId } = await JSON.parse(req.body);
         await User.findByIdAndDelete(operatorId);
         res.status(200).json({ message: "Operator deleted successfully" });
     } catch (error) {

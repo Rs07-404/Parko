@@ -89,7 +89,8 @@ const UserSchema = new mongoose.Schema<IUserDocument>({
   currentReservation: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Reservation',
-    default: null
+    default: null,
+    required: false
   },
   qrcode: {
     type: String,

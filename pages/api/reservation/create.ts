@@ -12,6 +12,7 @@ import { sendPushNotification } from "@root/utils/pushNotification";
 import { generateQRCode } from "@root/utils/qrcodeworks";
 import Ticket from "@root/models/Ticket";
 import mongoose from "mongoose";
+import cancelReservation from "@root/lib/actions/cancelReservation";
 /**
  * @description Creates a reservation for multiple parking spots.
  * @route POST /api/reservations/create
@@ -58,7 +59,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       parkingAreaId,
       parkingSpots, // Store the array of parking spots
       bookingTime: new Date(),
-      status: "confirmed",
+      status: "Booked",
     });
     
     const svgQrcode = await generateQRCode({
@@ -91,13 +92,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (user) {
       user.reservations.push(reservation._id);
       user.currentReservation = reservation._id;
-      await user.save();
+      
     }
 
     // Transaction to save reservation and update parking spots' status
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
+      await user.save({session});
       await reservation.save({ session });
       await ParkingSpot.updateMany(
         { '_id': { $in: parkingSpots } },
@@ -107,7 +109,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       await session.commitTransaction();
     } catch (error) {
       await session.abortTransaction();
-      throw new Error("Error in creating reservation");
+      throw new Error(error as string);
     } finally {
       session.endSession();
     }
@@ -116,8 +118,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await reservationQueue.add(
       'autoCancelReservation',
       { reservationId: reservation._id.toString() },
-      { delay: 30 * 60 * 1000 } // 30 mins in ms
+      { delay: 11 * 60 * 1000 } // 30 mins in ms
     );
+
+    // Cancel after half hour
+    setTimeout(()=>{cancelReservation(reservation._id)}, 10 * 60 * 1000)
 
     await sendPushNotification({
       userId: userId,
@@ -134,7 +139,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       console.error("Error in createReservation:", error.message);
       return res.status(500).json({ error: "Internal server error." });
     } else {
-      console.error("Unknown error in createReservation");
+      console.error("Unknown error in createReservation", error);
       return res.status(500).json({ error: "Internal server error." });
     }
   }

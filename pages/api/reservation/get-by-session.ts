@@ -18,11 +18,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         const reservations = await Reservation.find({ userId: user._id })
         .populate('parkingAreaId', 'name address')
+        .populate('parkingSpots', 'spotNumber')
         .populate('ticketKey');
 
         return res.status(200).json({
             message: "Reservations fetched successfully.",
-            reservations: reservations,
+            data: reservations,
         });
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });

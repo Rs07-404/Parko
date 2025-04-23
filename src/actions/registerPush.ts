@@ -1,4 +1,4 @@
-const registerPush = async () => {
+const registerPush = async (userId: string) => {
     const registration = await navigator.serviceWorker.register('/sw.js');
   
     const existingSubscription = await registration.pushManager.getSubscription();
@@ -12,7 +12,7 @@ const registerPush = async () => {
       // Send to backend to store in DB
       await fetch('/api/save-subscription', {
         method: 'POST',
-        body: JSON.stringify({ subscription: newSubscription }),
+        body: JSON.stringify({ subscription: newSubscription, userId: userId }),
         headers: { 'Content-Type': 'application/json' },
       });
     } else {

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev-https": "next dev --experimental-https --turbopack",
+    "worker": "ts-node worker/reservationWorker.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

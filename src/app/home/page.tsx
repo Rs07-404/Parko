@@ -31,8 +31,8 @@ export default function Home() {
             redirect("/verify-reservation");
         }
         getReservation();
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-            registerPush();
+        if ('serviceWorker' in navigator && 'PushManager' in window && authUser?._id) {
+            registerPush(authUser?._id);
         }
 
     }, [])
