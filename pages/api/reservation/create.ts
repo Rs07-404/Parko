@@ -7,9 +7,14 @@ import ParkingSpot from "@root/models/ParkingSpot";
 import Reservation from "@root/models/Reservation";
 import User from "@root/models/User";
 import { GaurdedRequest } from "@root/lib/interfaces/IRequest";
-
+import { reservationQueue } from "@root/lib/queue";
+import { sendPushNotification } from "@root/utils/pushNotification";
+import { generateQRCode } from "@root/utils/qrcodeworks";
+import Ticket from "@root/models/Ticket";
+import mongoose from "mongoose";
+import cancelReservation from "@root/lib/actions/cancelReservation";
 /**
- * @description Creates a reservation for a parking spot.
+ * @description Creates a reservation for multiple parking spots.
  * @route POST /api/reservations/create
  * @access user
  */
@@ -19,66 +24,111 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const { parkingAreaId, parkingSpotId, startTime, endTime } = req.body;
-    const userId = (req as GaurdedRequest).user._id; // Added by withRoleGuard middleware
+    const { parkingAreaId, parkingSpots } = req.body; // Changed to parkingSpots (array)
+    const sessionUser = (req as GaurdedRequest).user; // Added by withRoleGuard middleware
+    const userId = sessionUser._id;
+    if (sessionUser.currentReservation) {
+      return res.status(200).json({
+        success: true,
+        hasReservation: false,
+        message: "Cannot book when an ongoing reservation exists"
+      });
+    }
 
     await connectToDatabase();
 
-    const parkingSpot = await ParkingSpot.findById(parkingSpotId);
-    if (!parkingSpot) {
-      return res.status(404).json({ error: "Parking spot not found." });
-    }
-
-    if (parkingSpot.status === "occupied") {
-      return res.status(400).json({ error: "Parking spot is currently occupied." });
-    }
-
-    const overlappingReservation = await Reservation.findOne({
-      userId,
-      parkingAreaId,
-      parkingSpotId,
-      startTime: { $lte: endTime },
-      endTime: { $gte: startTime },
+    // Fetch parking spots that are available (status: "available") and are in the parkingSpots array
+    const availableSpots = await ParkingSpot.find({
+      '_id': { $in: parkingSpots },
+      'status': 'available'
     });
 
-    if (overlappingReservation) {
-      return res.status(400).json({ error: "Conflicting reservation exists for the selected time range." });
+    // If the number of available spots is less than the requested spots, there are unavailable spots
+    if (availableSpots.length !== parkingSpots.length) {
+      return res.status(400).json({
+        message: "Some of the selected parking spots are unavailable."
+      });
     }
 
+    
+    // Check for overlapping reservations for each of the selected parking spots
+    
+    // Create a new reservation for multiple parking spots
     const reservation = new Reservation({
       userId,
       parkingAreaId,
-      parkingSpotId,
-      startTime,
-      endTime,
-      status: "confirmed",
+      parkingSpots, // Store the array of parking spots
+      bookingTime: new Date(),
+      status: "Booked",
     });
+    
+    const svgQrcode = await generateQRCode({
+      reservationid: reservation._id.toString(),
+      parkingAreaId: parkingAreaId.toString(),
+      parkingSpots: parkingSpots.map((spot:string) => spot.toString()),
+      bookingTime: reservation.bookingTime.toISOString(),
+      status: reservation.status,
+      userId: userId.toString(),
+      parkingAreaName: parkingAreaId.name,
+    });
+
+    if(!svgQrcode){
+      return res.status(500).json({ error: "Error generating Ticket" });
+    }
+
+    const newTicket = new Ticket({
+      qrcode: svgQrcode,
+    });
+
+    if(!newTicket){
+      return res.status(500).json({ error: "Error generating Ticket" });
+    }
+
+    await newTicket.save();
+
+    reservation.ticketKey = newTicket._id;
 
     const user = await User.findById(userId);
     if (user) {
       user.reservations.push(reservation._id);
-      await user.save();
+      user.currentReservation = reservation._id;
+      
     }
 
-    await reservation.save();
-
-    if (!parkingSpot.areaId) {
-      parkingSpot.areaId = parkingAreaId;
+    // Transaction to save reservation and update parking spots' status
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      await user.save({session});
+      await reservation.save({ session });
+      await ParkingSpot.updateMany(
+        { '_id': { $in: parkingSpots } },
+        { $set: { status: 'occupied', areaId: parkingAreaId } },
+        { session }
+      );
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw new Error(error as string);
+    } finally {
+      session.endSession();
     }
-    parkingSpot.status = "occupied";
-    await parkingSpot.save();
 
-    const timeUntilAvailable = new Date(endTime).getTime() - Date.now();
-    if (timeUntilAvailable > 0) {
-      setTimeout(async () => {
-        const spot = await ParkingSpot.findById(parkingSpotId);
-        if (spot?.status === "occupied") {
-          spot.status = "available";
-          await spot.save();
-        }
-      }, timeUntilAvailable);
-    }
+    // Optionally handle status reset after reservation ends
+    await reservationQueue.add(
+      'autoCancelReservation',
+      { reservationId: reservation._id.toString() },
+      { delay: 11 * 60 * 1000 } // 30 mins in ms
+    );
 
+    // Cancel after half hour
+    setTimeout(()=>{cancelReservation(reservation._id)}, 10 * 60 * 1000)
+
+    await sendPushNotification({
+      userId: userId,
+      title: 'Reservation Created',
+      body: 'Your reservation has been created successfully.',
+    });
 
     return res.status(201).json({
       message: "Reservation created successfully.",
@@ -89,7 +139,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       console.error("Error in createReservation:", error.message);
       return res.status(500).json({ error: "Internal server error." });
     } else {
-      console.error("Unknown error in createReservation");
+      console.error("Unknown error in createReservation", error);
       return res.status(500).json({ error: "Internal server error." });
     }
   }

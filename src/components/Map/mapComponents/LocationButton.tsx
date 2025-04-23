@@ -34,7 +34,7 @@ function LocateButton() {
         const { latitude, longitude } = position.coords;
         setLatit(latitude);
         setLongit(longitude);
-        map.setView([latitude, longitude], 10);
+        map.setView([latitude, longitude], 16);
       } catch (error) {
         if (error instanceof Error && error.message) {
           toast.error("Error getting Location: " + error.message);

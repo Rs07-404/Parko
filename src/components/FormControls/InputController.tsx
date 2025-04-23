@@ -23,6 +23,7 @@ interface IInputControllerProps<T extends FieldValues>
     required?: boolean;
     noSpace?: boolean;
     autoComplete?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: "alphaNum" | "email" | "number" | "text" | "password" | "tel" | "url" | "search" | "date" | "time" | "datetime-local" | "month" | "week" | "color" | "file";
     resetClick?: () => void;
 }
@@ -47,7 +48,10 @@ export const InputController = <T extends FieldValues>({ name, label, reset, noS
                             disabled={rest?.disabled}
                             readOnly={rest?.readOnly}
                             error={!!form.formState.errors[name]}
-                            onChange={(e) => field.onChange(filterInputValue(rest?.type, e.target.value, noSpace))}
+                            onChange={(e) => {
+                                field.onChange(filterInputValue(rest?.type, e.target.value, noSpace));
+                                rest.onChange?.(e);
+                            }}
                             minLength={rest?.minLength}
                             maxLength={rest?.maxLength}
                             autoComplete={rest?.autoComplete}

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default function App() {
   const { authUser } = useAuthContext();
-  if(authUser){
+  if(authUser){    
     return <Button onClick={()=>redirect("/home")}>Home</Button>;
   } else {
     return <Button onClick={()=>redirect("/login")}>Login</Button>;

@@ -35,13 +35,14 @@ html body[data-scroll-locked] {
   margin: 0;
   width: 200px !important;
   height: max-content;
+  background-color: transparent !important;
+  border: none !important;
 }
 
 .dialog-override {
   z-index: 1000 !important;
   position: relative;
 }
-
 
 @keyframes accordian-lr {
   0%{

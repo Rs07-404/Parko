@@ -95,7 +95,14 @@ export default function RootLayout({
               <AppLayout>
                 {children}
               </AppLayout>
-              <Toaster position="top-center" richColors={true} />
+              <Toaster 
+                position="top-center" 
+                richColors={true} 
+                className="toaster-override"
+                toastOptions={{
+                  className: 'toaster-override'
+                }}
+              />
             </Theme>
           </ThemeProvider>
         </AuthContextProvider>

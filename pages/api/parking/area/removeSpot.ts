@@ -42,4 +42,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRoleGuard(handler, ["admin", "LandOwner"]);
+export default withRoleGuard(handler, ["admin"]);
