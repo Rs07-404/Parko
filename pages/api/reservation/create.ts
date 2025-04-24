@@ -7,7 +7,6 @@ import ParkingSpot from "@root/models/ParkingSpot";
 import Reservation from "@root/models/Reservation";
 import User from "@root/models/User";
 import { GaurdedRequest } from "@root/lib/interfaces/IRequest";
-import { reservationQueue } from "@root/lib/queue";
 import { sendPushNotification } from "@root/utils/pushNotification";
 import { generateQRCode } from "@root/utils/qrcodeworks";
 import Ticket from "@root/models/Ticket";
@@ -113,13 +112,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     } finally {
       session.endSession();
     }
-
-    // Optionally handle status reset after reservation ends
-    await reservationQueue.add(
-      `autoCancelReservation-${reservation._id.toString()}`,
-      { reservationId: reservation._id.toString() },
-      { delay: 5 * 60 * 1000, attempts: 1 } // 5 mins in ms
-    );
 
     // Cancel after half hour
     setTimeout(()=>{cancelReservation(reservation._id)}, 10 * 60 * 1000) // 10 mins in ms

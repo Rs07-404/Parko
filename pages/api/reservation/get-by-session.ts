@@ -21,6 +21,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         .populate('parkingSpots', 'spotNumber')
         .populate('ticketKey');
 
+        // Sort according latest Date
+        reservations.sort((a, b) => b.bookingTime.getTime() - a.bookingTime.getTime());
+
         return res.status(200).json({
             message: "Reservations fetched successfully.",
             data: reservations,
