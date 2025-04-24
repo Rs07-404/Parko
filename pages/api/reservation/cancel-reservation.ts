@@ -13,8 +13,11 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
 
         const result = await cancelReservation(reservationId)
+        if(!result.data) {
+            return res.status(400).json({ error: "Error Occured" })
+        }
 
-        return res.status(200).json({ message: "Reservation canceled successfully"})
+        return res.status(200).json({ message: "Reservation canceled successfully", data: result.data})
 
     } catch (error) {
         console.error("Error canceling reservation:", error)

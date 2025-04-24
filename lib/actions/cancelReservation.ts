@@ -33,8 +33,10 @@ async function cancelReservation(reservationId: string){
       }
 
       console.log(`Reservation ${reservationId} cancelled due to no entry`);
+      return { message: "Reservation canceled successfully", data: reservation }
     } else {
       console.log(`Reservation ${reservationId} already handled`);
+      return { message: "Reservation already handled" }
     }
 }
 
