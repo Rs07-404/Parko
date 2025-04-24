@@ -24,22 +24,22 @@ export default function VerifyReservationsPage() {
     }
   }, [activeTab, barcodeValue])
 
-  const handleQrDetected = async (imageData: string) => {
+  const handleQrDetected = async (qrData: { type: 'image' | 'key', value: string }) => {
     try {
-      const response = await fetch(authUser?.roles[0] === "EntryOperator" ? "/reservation/verify-entry" : "/reservation/verify-exit", {
+      const response = await fetch(authUser?.roles[0] === "EntryOperator" ? "/api/reservation/verify-entry" : "/api/reservation/verify-exit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image: imageData }),
+        body: JSON.stringify(qrData.type === 'image' ? { image: qrData.value } : { ticketKey: qrData.value }),
       })
 
-      const data = await response.json()
+      const responseData = await response.json()
 
       if (response.ok) {
-        toast.success(data.message);
+        toast.success(responseData.message);
       } else {
-        toast.error(data.message);
+        toast.error(responseData.message);
       }
     } catch (error) {
       console.error(error);

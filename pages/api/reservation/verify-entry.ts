@@ -7,6 +7,7 @@ import scanQRCodeFromImage from "@root/utils/scanImage";
 import { decryptEncryptedPayload } from "@root/utils/qrcodeworks";
 import { withRoleGuard } from "@root/lib/middlewares/withRoleGuard";
 import User from "@root/models/User";
+import { sendPushNotification } from "@root/utils/pushNotification";
 
 /**
  * @description Verifies a parking reservation based on QR code in an image for entry
@@ -21,16 +22,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const currentTime = new Date();
     const { image, ticketKey } = req.body;
-    let encryptedPayload;
+    const encryptedPayload = image ? await scanQRCodeFromImage(image) : ticketKey;
 
     // Validate key or image
-    if (image) {
-      encryptedPayload = await scanQRCodeFromImage(image);
-    } else if (ticketKey) {
-      encryptedPayload = ticketKey;
-    } else {
-      return res.status(400).json({ message: "Validation key or image is invalid." });
-    }
 
     if (!encryptedPayload || typeof encryptedPayload !== "string") {
       return res.status(400).json({ message: "Invalid Key or Image" });
@@ -82,6 +76,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           existingReservation.entryTime = currentTime;
           existingReservation.status = "Entered";
           await existingReservation.save();
+
+          // Send Notification to user
+          await sendPushNotification({
+            userId: existingReservation.userId,
+            title: 'Entry Verified',
+            body: 'You Can Enter the Parking Area!',
+          });
+
           return res.status(200).json({
             message: "Entry verified",
           });

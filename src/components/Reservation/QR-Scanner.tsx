@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import jsQR from "jsqr"
 
 interface QrScannerProps {
-    onQrDetected: (imageData: string) => void
+    onQrDetected: (data: { type: 'image' | 'key', value: string }) => void
 }
 
 
@@ -85,6 +85,27 @@ export function QrScanner({ onQrDetected }: QrScannerProps) {
         }, 500) // Check for QR code every 500ms
     }
 
+    const captureImage = () => {
+        if (!videoRef.current || !canvasRef.current) return
+
+        const video = videoRef.current
+        const canvas = canvasRef.current
+        const context = canvas.getContext("2d")
+
+        if (!context || video.videoWidth === 0) return
+
+        // Set canvas dimensions to match video
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+
+        // Draw current video frame to canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL("image/jpeg")
+
+        // Send to parent for processing
+        onQrDetected({ type: 'image', value: imageData })
+    }
+
     const captureAndCheckForQr = () => {
         if (!videoRef.current || !canvasRef.current || !isScanning) return
 
@@ -104,11 +125,11 @@ export function QrScanner({ onQrDetected }: QrScannerProps) {
         const code = jsQR(imageData.data, canvas.width, canvas.height);
 
         // Get image data as base64
-        const image = canvas.toDataURL("image/jpeg")
+        // const image = canvas.toDataURL("image/jpeg")
 
         // Send to parent for processing
         if (code) {
-            onQrDetected(image)
+            onQrDetected({ type: 'key', value: code.data })
         }
     }
 
@@ -155,6 +176,17 @@ export function QrScanner({ onQrDetected }: QrScannerProps) {
                     </Button>
                 </div>
             </div>
+
+            {isScanning && (
+                <div className="mt-4 flex justify-center">
+                    <Button 
+                        onClick={captureImage}
+                        className="w-full"
+                    >
+                        Capture Image
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }

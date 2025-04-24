@@ -20,7 +20,7 @@ export async function sendPushNotification({ userId, title, body }: { userId: st
   const subscriptions = await getSubscriptionsByUserId(userId);
   if (!subscriptions || subscriptions.length === 0) return;
 
-  const payload = JSON.stringify({ title, body, url: '/reservations' });
+  const payload = JSON.stringify({ title, body, url: 'https://parko-orpin.vercel.app/reservations' });
 
   // Send notifications to all devices in parallel
   const notificationPromises = subscriptions.map(subscription => 
