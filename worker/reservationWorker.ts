@@ -16,7 +16,17 @@ import cancelReservation from '@root/lib/actions/cancelReservation';
   // Create Worker
   new Worker('reservationQueue', async (job) => {
     const { reservationId } = job.data;
-    cancelReservation(reservationId);
+    // Call the API to cancel the reservation
+    try {
+      const response = await fetch('http://parko-orpin.vercel.app/api/reservation/cancel-reservation', {
+        method: 'POST',
+        body: JSON.stringify({ reservationId }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error canceling reservation:', error);
+    }
     
   }, {
     connection: redisConnection,
