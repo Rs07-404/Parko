@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/manage-reservations.ts",
-      "schedule": "1,7,14,21,28,35,42,49,56 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
