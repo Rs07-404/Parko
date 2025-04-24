@@ -116,13 +116,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Optionally handle status reset after reservation ends
     await reservationQueue.add(
-      'autoCancelReservation',
+      `autoCancelReservation-${reservation._id.toString()}`,
       { reservationId: reservation._id.toString() },
-      { delay: 11 * 60 * 1000 } // 30 mins in ms
+      { delay: 5 * 60 * 1000, attempts: 1 } // 5 mins in ms
     );
 
     // Cancel after half hour
-    setTimeout(()=>{cancelReservation(reservation._id)}, 10 * 60 * 1000)
+    setTimeout(()=>{cancelReservation(reservation._id)}, 10 * 60 * 1000) // 10 mins in ms
 
     await sendPushNotification({
       userId: userId,
