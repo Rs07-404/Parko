@@ -8,6 +8,8 @@ import { decryptEncryptedPayload } from "@root/utils/qrcodeworks";
 import { withRoleGuard } from "@root/lib/middlewares/withRoleGuard";
 import User from "@root/models/User";
 import { sendPushNotification } from "@root/utils/pushNotification";
+import mongoose from "mongoose";
+import ParkingSpot from "@root/models/ParkingSpot";
 
 /**
  * @description Verifies a parking reservation based on QR code in an image for exit
@@ -32,12 +34,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectToDatabase();
 
     const data = await decryptEncryptedPayload(encryptedPayload);
-    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.bookingTime || !data?.parkingAreaName) {
+    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.bookingTime) {
       return res.status(400).json({ message: "Invalid Key or Image" });
     }
 
     const user = await User.findById(data.userId);
-    
+
 
     if (!user) {
       return res.status(404).json({
@@ -54,7 +56,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Check if current reservation is same as the reservationid in the data
-    if (user.currentReservation !== data.reservationid) {
+    if (user.currentReservation.toString() !== data.reservationid.toString()) {
       return res.status(400).json({
         message: "Current reservation is not the same in the image or key"
       });
@@ -71,13 +73,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           });
         case "Entered":
           // transaction to update reservation and user
+          // setup transaction to update reservation and user at same time
+          const session = await mongoose.startSession();
+          session.startTransaction();
           existingReservation.verified = true;
           existingReservation.exitTime = currentTime;
           existingReservation.status = "Completed";
-          await existingReservation.save();
           user.currentReservation = null;
+
+          await ParkingSpot.updateMany({ _id: { $in: existingReservation.parkingSpots } }, { $set: { status: 'available' } }, { session });
+          await existingReservation.save({ session });
+          await user.save({ session });
+          await session.commitTransaction();
           // Clear user's current reservation
-          await user.save();
           await sendPushNotification({
             userId: existingReservation.userId,
             title: 'Exit Verified',
@@ -105,13 +113,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-} catch (error) {
-  console.error("Error verifying reservation:", (error as Error).message);
-  return res.status(500).json({
-    message: "Internal server error",
-    error: (error as Error).message,
-  });
-}
+  } catch (error) {
+    console.error("Error verifying reservation:", (error as Error).message);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: (error as Error).message,
+    });
+  }
 }
 
-export default withRoleGuard(handler, ["Admin", "EntryOperator"])
+export default withRoleGuard(handler, ["Admin", "ExitOperator"])

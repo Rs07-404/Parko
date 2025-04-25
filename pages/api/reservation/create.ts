@@ -64,11 +64,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const svgQrcode = await generateQRCode({
       reservationid: reservation._id.toString(),
       parkingAreaId: parkingAreaId.toString(),
-      parkingSpots: parkingSpots.map((spot:string) => spot.toString()),
       bookingTime: reservation.bookingTime.toISOString(),
-      status: reservation.status,
       userId: userId.toString(),
-      parkingAreaName: parkingAreaId.name,
     });
 
     if(!svgQrcode){
