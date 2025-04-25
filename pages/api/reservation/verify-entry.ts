@@ -34,7 +34,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectToDatabase();
 
     const data = await decryptEncryptedPayload(encryptedPayload);
-    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.bookingTime || !data?.parkingAreaName) {
+    console.log("decrypted payload: ", data)
+    if (!data?.userId || !data?.reservationid || !data?.parkingAreaId || !data?.bookingTime) {
       return res.status(400).json({ message: "Invalid Key or Image" });
     }
 
@@ -54,9 +55,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         message: "User has no current reservation"
       });
     }
+    console.log(user.currentReservation + ":"+data.reservationid);
 
     // Check if current reservation is same as the reservationid in the data
-    if (user.currentReservation !== data.reservationid) {
+    if (user.currentReservation.toString() !== data.reservationid.toString()) {
       return res.status(400).json({
         message: "Current reservation is not the same in the image or key"
       });
