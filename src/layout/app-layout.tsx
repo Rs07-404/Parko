@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { redirect, usePathname } from "next/navigation";
 import Loading from "@/app/loading";
-import { AuthRoutes, ProtectedRoutes, PublicRoutes, TestRoutes } from "@/lib/routes";
+import { AuthRoutes, protectedAuthRoutes, ProtectedRoutes, PublicRoutes, TestRoutes } from "@/lib/routes";
 import Header from "./app-header";
 import { Sidebar, SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SideBarContent } from "@/components/ui/sidebarContent";
@@ -19,13 +19,49 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     const isAuthURL = AuthRoutes.includes(pathname ?? "");
     const isTestURL = TestRoutes.includes(pathname ?? "");
     const isProtectedURL = !isPublicURL && !isAuthURL && ProtectedRoutes.includes(pathname ?? "");
+    const isProtectedAuthURL = protectedAuthRoutes.includes(pathname ?? "");
     const { authUser, authLoading } = useAuthContext();
     const isMounted = useMounted();
 
 
     const setup = async () => {
         if (!authLoading) {
-            if (isAuthURL && authUser) {
+            if ((isAuthURL || isProtectedAuthURL) && authUser) {
+                if (authUser.roles.includes("Admin")) {
+                    redirect("/operator-management");
+                } else if (authUser.roles.includes("EntryOperator") || authUser.roles.includes("ExitOperator")) {
+                    redirect("/verify-reservation");
+                } else if (authUser.roles.includes("User")) {
+                    if(authUser.emailVerified){
+                        redirect("/home");
+                    } else if (!authUser.emailVerified) {
+                        redirect("/verify-email");
+                    }
+                } else if (authUser.roles.includes("LandOwner")) {
+                    redirect("/home");
+                }
+            }
+
+            if (!isProtectedURL && !authUser) {
+                redirect('/login');
+            }
+            if(!isProtectedAuthURL && authUser && !authUser.emailVerified){
+                redirect("/verify-email");
+            }
+        }
+    }
+
+    useEffect(() => {
+        setup();
+    }, [authUser, authLoading, pathname]);
+
+    if (!isMounted || authLoading) {
+        return <Loading />
+    }
+
+    if (pathname === "/" || pathname === null) {
+        if (authUser) {
+            if(authUser.emailVerified){
                 if (authUser.roles.includes("Admin")) {
                     redirect("/operator-management");
                 } else if (authUser.roles.includes("EntryOperator") || authUser.roles.includes("ExitOperator")) {
@@ -36,24 +72,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     redirect("/home");
                 }
             }
-
-            if (isProtectedURL && !authUser) {
-                redirect('/login');
+            else {
+                redirect("/verify-email");
             }
-        }
-    }
-
-    useEffect(() => {
-        setup();
-    }, [authUser])
-
-    if (!isMounted || authLoading) {
-        return <Loading />
-    }
-
-    if (pathname === "/" || pathname === null) {
-        if (authUser) {
-            redirect("/home");
         }
         redirect("/login");
     }
@@ -80,12 +101,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
 
 
-    if (isAuthURL && !authUser) {
+    if (isAuthURL && !authUser || isProtectedAuthURL && !authUser?.emailVerified) {
         return <AuthLayout>{children}</AuthLayout>
     }
 
 
-    if (!isPublicURL && isProtectedURL && authUser) {
+    if (!isPublicURL && isProtectedURL && authUser ) {
         return (
             <Provider store={store} >
                 <SidebarProvider className="p-0 m-0 overflow-hidden">

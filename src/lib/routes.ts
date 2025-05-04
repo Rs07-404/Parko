@@ -8,4 +8,6 @@ export const ProtectedRoutes = [
     "/reservations",
     "/verify-reservation"
 ];
+
+export const protectedAuthRoutes = ["/verify-email"]
 export const TestRoutes = ["/test"];

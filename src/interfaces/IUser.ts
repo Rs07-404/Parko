@@ -13,6 +13,7 @@ export interface IUser{
         image: string;
     };
     parkingArea?: IParkingArea | null;
+    emailVerified: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

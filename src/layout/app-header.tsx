@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthContext } from '@/context/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useLogOut from '@/hooks/use-logout';
+import Link from 'next/link';
 
 const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const { theme, setTheme } = useTheme();
@@ -35,10 +36,12 @@ const Header: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
                     <Moon className="hidden dark:inline" />
                 </Button>
                 <div>
+                    <Link href="/profile">
                     <Avatar className='cursor-pointer'>
                         <AvatarImage src={authUser?.profile.image} alt={"profile"} />
                         <AvatarFallback>{(authUser?.profile.firstName[0] ?? "") + (authUser?.profile.lastName[0] ?? "")}</AvatarFallback>
                     </Avatar>
+                    </Link>
                 </div>
                 <div className='sm:flex hidden'>{authUser?.profile.firstName}</div>
                 {isMobile &&
