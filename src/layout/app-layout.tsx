@@ -42,11 +42,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 }
             }
 
-            if (!isProtectedURL && !authUser) {
-                redirect('/login');
-            }
-            if(!isProtectedAuthURL && authUser && !authUser.emailVerified){
+            if(!isProtectedAuthURL && authUser && !authUser.emailVerified && authUser.roles.includes("User")){
                 redirect("/verify-email");
+            }
+            if ((isProtectedURL || isProtectedAuthURL) && !authUser) {
+                redirect('/login');
             }
         }
     }

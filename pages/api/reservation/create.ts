@@ -111,7 +111,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Cancel after half hour
-    setTimeout(()=>{cancelReservation(reservation._id)}, 10 * 60 * 1000) // 10 mins in ms
+    setTimeout(()=>{cancelReservation(reservation._id)}, 5 * 60 * 1000) // 5 mins in ms
 
     await sendPushNotification({
       userId: userId,
