@@ -10,6 +10,7 @@ import { sniglet } from "@/styles/fonts/Fonts";
 import { toast } from "sonner";
 import InlineLoader from "../ui/inline-loader";
 import { setReservation } from "@/store/slices/ReservationSlice";
+import { useAuthContext } from "@/context/auth-context";
 
 
 const SpotSelectionModal: React.FC<React.ComponentProps<typeof Dialog>> = (props) => {
@@ -22,6 +23,7 @@ const SpotSelectionModal: React.FC<React.ComponentProps<typeof Dialog>> = (props
     const rentPerHour: number = 10;
     const [finalPrice, setFinalPrice] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const { loadSession } = useAuthContext();
 
     // Redux
     const dispatch = useDispatch();
@@ -109,6 +111,8 @@ const SpotSelectionModal: React.FC<React.ComponentProps<typeof Dialog>> = (props
             dispatch(setReservation(data.reservation));
             resetModal();
             dispatch(resetParkingArea());
+            loadSession(); // Reload the session to get the updated reservation data
+
         } catch (e) {
             if (e instanceof Error) {
                 return toast.error(e.message);

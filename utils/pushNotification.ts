@@ -28,7 +28,8 @@ export async function sendPushNotification({ userId, title, body }: { userId: st
       .catch(err => {
         console.error(`Push failed for subscription ${subscription._id}:`, err);
         // If the subscription is no longer valid, remove it from the database
-        if (err.statusCode === 410) {
+        if (err.statusCode === 410 || err.statusCode === 404) {
+          console.log(`Subscription ${subscription._id} is no longer valid. Removing from database.`);
           return PushSubscription.findByIdAndDelete(subscription._id);
         }
         return null;
