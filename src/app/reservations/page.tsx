@@ -14,12 +14,15 @@ export default function Home() {
             <ScrollArea className="h-[calc(100vh-150px)] sm:pr-4 md:pr-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Example of different status tickets */}
-                    {reservations?.map((reservation) => (
+                    {(reservations && reservations?.length > 0) ? reservations?.map((reservation) => (
                         <TicketCard
                             key={reservation._id}
                             reservation={reservation}
                         />
-                    ))}
+                    )):
+                    <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center text-gray-500">
+                        No reservations found.
+                    </div>}
                     {/* <TicketCard
                         reservation={{
                             ...sampleReservation,

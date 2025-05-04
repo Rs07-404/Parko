@@ -18,7 +18,12 @@ export interface IUserDocument extends mongoose.Document {
   reservations: mongoose.Types.ObjectId[];
   currentReservation: mongoose.Types.ObjectId;
   qrcode: string;
+  emailVerified: boolean;
   parkingArea: mongoose.Types.ObjectId;
+  otp: {
+    value: string;
+    expiresIn: Date;
+  } | null;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -91,6 +96,24 @@ const UserSchema = new mongoose.Schema<IUserDocument>({
     ref: 'Reservation',
     default: null,
     required: false
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  otp: {
+    type: {
+      value: {
+        type: String,
+        required: true,
+      },
+      expiresIn: {
+        type: Date,
+        required: true,
+      },
+    },
+    default: null,
+    required: false,
   },
   qrcode: {
     type: String,
