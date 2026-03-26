@@ -1,9 +1,8 @@
 import { IParkingArea } from "@/interfaces/Generic/IParkingArea";
 import { useEffect, useState, useCallback } from "react";
 
-
 export function useAllParkingAreas() {
-  const [allParkingAreas, setAllParkingAreas] = useState<IParkingArea[] | null>(null);
+  const [allParkingAreas, setAllParkingAreas] = useState<IParkingArea[]>([]);
   const [AllAreaLoading, setAllAreaLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,7 +12,8 @@ export function useAllParkingAreas() {
       setError(null);
 
       const res = await fetch("/api/parking/area/withspots/");
-      if (!res.ok) throw new Error(`Failed to fetch parking areas: ${res.statusText}`);
+      if (!res.ok)
+        throw new Error(`Failed to fetch parking areas: ${res.statusText}`);
 
       const data: IParkingArea[] = await res.json();
       setAllParkingAreas(data);
