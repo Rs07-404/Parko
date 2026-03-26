@@ -12,43 +12,50 @@ import { GaurdedRequest } from "@root/lib/interfaces/IRequest";
  * @access user
  */
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    const currentReservationId = (
+      req as GaurdedRequest
+    ).user.currentReservation?.toString(); // Added by withRoleGuard middleware
+
+    await connectToDatabase();
+
+    if (!currentReservationId) {
+      return res.status(404).json({ message: "No Reservations Found" });
     }
 
-    try {
-        const currentReservationId = (req as GaurdedRequest).user.currentReservation.toString() // Added by withRoleGuard middleware
+    // select name and address of parkingAreaId
+    const currentReservation = await Reservation.findById(currentReservationId)
+      .populate("ticketKey")
+      .populate("parkingAreaId", "name address");
 
-        await connectToDatabase();
+    //TODO: currentTime undefined.....
 
-        if (!currentReservationId) {
-            return res.status(404).json({ message: "No Reservations Found" })
-        }
-
-        // select name and address of parkingAreaId
-        const currentReservation = await Reservation.findById(currentReservationId)
-        .populate('ticketKey')
-        .populate('parkingAreaId', 'name address');
-
-        //TODO: currentTime undefined.....
-
-        if (!currentReservation) {
-            return res.status(404).json({ message: "No Reservations Found" })
-        }
-
-        return res.status(200).json({
-            message: "Reservation found successfully.",
-            reservation: currentReservation,
-        });
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error("Error in getCurrentReservation:", error.message);
-            return res.status(500).json({ error: "Internal server error." });
-        } else {
-            console.error("Unknown error in getCurrentReservation");
-            return res.status(500).json({ error: "Internal server error." });
-        }
+    if (!currentReservation) {
+      return res.status(404).json({ message: "No Reservations Found" });
     }
+
+    return res.status(200).json({
+      message: "Reservation found successfully.",
+      reservation: currentReservation,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in getCurrentReservation:", error.message);
+      return res.status(500).json({ error: "Internal server error." });
+    } else {
+      console.error("Unknown error in getCurrentReservation");
+      return res.status(500).json({ error: "Internal server error." });
+    }
+  }
 }
 
-export default withRoleGuard(handler, ["User", "Admin", "EntryOperator", "ExitOperator"]);
+export default withRoleGuard(handler, [
+  "User",
+  "Admin",
+  "EntryOperator",
+  "ExitOperator",
+]);
